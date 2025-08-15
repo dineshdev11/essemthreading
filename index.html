@@ -1,44 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Under Construction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-            text-align: center;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333333;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #666666;
-            line-height: 1.6;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Under Construction | ESSEM Threading Tools</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(135deg, #004aad, #0078d4);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+    }
+    .container {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        max-width: 500px;
+        width: 90%;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    h2 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+    p {
+        margin: 8px 0;
+        color: #e0e0e0;
+    }
+    a {
+        color: #ffdd57;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    .countdown {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 15px;
+        color: #ffdd57;
+    }
+</style>
 </head>
 <body>
     <div class="container">
         <h1>ESSEM THREADING TOOLS MANUFACTURING</h1>
-        <br>
-        <h1>Website Under Construction</h1>
+        <h2>Website Under Construction 🚧</h2>
         <p>We are currently working on something amazing!</p>
         <p>Please check back soon.</p>
-        <p>Developer Contact : <a href="tel:+916382585971">+916382585971</a></p>
+        <p>Developer Contact: <a href="tel:+916382585971">+91 63825 85971</a></p>
+        <div class="countdown" id="countdown"></div>
     </div>
+
+<script>
+    // Countdown Timer (example: 30 days from now)
+    const launchDate = new Date();
+    launchDate.setDate(launchDate.getDate() + 30);
+
+    const countdownEl = document.getElementById("countdown");
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = launchDate - now;
+
+        if (distance <= 0) {
+            countdownEl.innerHTML = "We are live now!";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownEl.innerHTML = `Launching in ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+</script>
 </body>
 </html>
