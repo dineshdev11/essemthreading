@@ -1,208 +1,1518 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ESSEM Threading Tools</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <!-- AOS CSS/JS (head or before script) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 1000, once: true });</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      /* ---------- 1) Init AOS (must run after AOS script loaded) ---------- */
+      if (window.AOS) {
+        AOS.init({ duration: 900, once: true, easing: 'ease-out-cubic' });
+      }
+
+      /* ---------- 2) Counter animation: trigger when visible using IntersectionObserver ---------- */
+      const counters = document.querySelectorAll('.counter');
+      if (counters.length) {
+        const counterObserver = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              const target = parseInt(el.getAttribute('data-target') || el.textContent.replace(/\D/g, ''), 10) || 0;
+              const duration = 1400; // ms
+              let start = null;
+              function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                el.innerText = Math.floor(progress * target);
+                if (progress < 1) {
+                  requestAnimationFrame(step);
+                } else {
+                  el.innerText = target + '+';
+                }
+              }
+              requestAnimationFrame(step);
+              obs.unobserve(el);
+            }
+          });
+        }, { threshold: 0.4 });
+        counters.forEach(c => counterObserver.observe(c));
+      }
+
+      /* ---------- 3) Hero caption replay on carousel slide ---------- */
+      const heroCarousel = document.getElementById('heroCarousel');
+      function playCaptionAnimations(item) {
+        if (!item) return;
+        // add .play to each caption element and remove after animation ends (so it can replay later)
+        item.querySelectorAll('.fadeInDown, .fadeInUp').forEach((el) => {
+          el.classList.remove('play');          // reset
+          void el.offsetWidth;                  // reflow to allow re-add
+          el.classList.add('play');             // triggers animation
+          // remove .play after animation to prepare for next slide (duration + small buffer)
+          const duration = parseFloat(getComputedStyle(el).animationDuration) || 1;
+          setTimeout(() => el.classList.remove('play'), (duration * 1000) + 50);
+        });
+      }
+
+      // play animations for first active item immediately
+      const initialActive = document.querySelector('#heroCarousel .carousel-item.active');
+      if (initialActive) playCaptionAnimations(initialActive);
+
+      // Listen for Bootstrap carousel events (requires bootstrap.js loaded)
+      if (heroCarousel) {
+        heroCarousel.addEventListener('slid.bs.carousel', function (e) {
+          const active = heroCarousel.querySelector('.carousel-item.active');
+          playCaptionAnimations(active);
+        });
+      }
+
+      /* ---------- 4) Optional: ensure AOS refresh on dynamic changes ---------- */
+      if (window.AOS) {
+        setTimeout(() => AOS.refresh(), 600);
+      }
+    });
+  </script>
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
     }
+
     .navbar {
-      background: #02245B;
+      height: max-content !important;
     }
+
     .navbar .nav-link {
-      color: #fff !important;
+      transition: color 0.3s ease, border-bottom 0.3s ease;
+      border-bottom: 2px solid transparent;
     }
+
+    .navbar .nav-link:hover {
+      color: #0056b3;
+      /* stylish blue hover */
+      border-bottom: 2px solid #0056b3;
+    }
+
     .hero {
       background: linear-gradient(135deg, #02245B, #0d6efd);
       color: white;
       padding: 120px 0;
       text-align: center;
     }
+
     .hero h1 {
       font-size: 3rem;
       font-weight: bold;
     }
+
     .section-title {
       font-weight: bold;
       color: #02245B;
       margin-bottom: 30px;
     }
+
     .product-card {
       border: none;
       border-radius: 12px;
       padding: 25px;
       text-align: center;
       background: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
     }
+
     .product-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
+
     .product-card i {
       font-size: 2.5rem;
       color: #0d6efd;
       margin-bottom: 15px;
     }
+
     footer {
       background: #02245B;
       color: white;
       padding: 25px 0;
     }
+
     footer a {
       color: #0d6efd;
       margin: 0 10px;
     }
   </style>
 </head>
+
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">ESSEM Tools</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
-        <li class="nav-item"><a class="nav-link" href="#clients">Clients</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+  <!-- Modern Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+      <!-- Brand Logo -->
+      <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid d-inline-block align-text-top"
+        style="height:48px; width:auto;padding: 0px;margin: 0px;">
 
-<!-- Hero Section -->
-<section class="hero" id="home">
-  <div class="container">
-    <h1>ESSEM Threading Tools</h1>
-    <p class="lead">Complete Machining Solutions with Best Services & Support</p>
-    <a href="#products" class="btn btn-light btn-lg mt-3">Explore Products</a>
-  </div>
-</section>
+      <!-- Toggler -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-<!-- About Section -->
-<section id="about" class="py-5">
-  <div class="container">
-    <h2 class="section-title text-center">About Us</h2>
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <p>
-          ESSEM Threading Tools is a leading manufacturer and supplier of cutting tools, threading solutions, and precision machining products.
-          With a focus on innovation, quality, and customer satisfaction, we deliver international standard tools at competitive prices.
-        </p>
-        <ul>
-          <li>ISO Turning Holders & Milling Tools</li>
-          <li>Inserts, Collets, Tool Holders</li>
-          <li>Gauges, Drills, Reamers, Endmills</li>
-          <li>Special Cutting Tools for industries</li>
+      <!-- Nav Links -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto fw-semibold">
+          <li class="nav-item">
+            <a class="nav-link px-3 active" href="#home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="#products">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="#clients">Clients</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="#contact">Contact</a>
+          </li>
         </ul>
       </div>
-      <div class="col-md-6 text-center">
-        <img src="products.jpg" alt="About ESSEM" class="img-fluid rounded">
+    </div>
+  </nav>
+
+
+
+
+  <!-- Hero Carousel -->
+  <section id="home">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="images/industry1.jpg" class="d-block w-100 hero-img" alt="Machinery">
+          <div class="carousel-overlay"></div>
+          <div class="carousel-caption animate-caption">
+            <h1 class="display-4 fw-bold text-white fadeInDown">ESSEM Threading Tools</h1>
+            <p class="lead text-light fadeInUp">Complete Machining Solutions with Best Services & Support</p>
+            <a href="#products" class="btn btn-primary btn-lg mt-3 glow-btn">Explore Products</a>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <img src="images/industry2.jpg" class="d-block w-100 hero-img" alt="Tools">
+          <div class="carousel-overlay"></div>
+          <div class="carousel-caption animate-caption">
+            <h1 class="display-4 fw-bold text-white fadeInDown">Precision Engineering</h1>
+            <p class="lead text-light fadeInUp">High-quality threading tools built for performance</p>
+            <a href="#about" class="btn btn-outline-light btn-lg mt-3 glow-btn">Learn More</a>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <img src="images/industry3.jpg" class="d-block w-100 hero-img" alt="Manufacturing">
+          <div class="carousel-overlay"></div>
+          <div class="carousel-caption animate-caption">
+            <h1 class="display-4 fw-bold text-white fadeInDown">Global Manufacturing Support</h1>
+            <p class="lead text-light fadeInUp">Trusted worldwide for precision and durability</p>
+            <a href="#contact" class="btn btn-warning btn-lg mt-3 glow-btn">Contact Us</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </section>
+
+  <style>
+    /* Fullscreen hero */
+    .hero-img {
+      height: 90vh;
+      object-fit: cover;
+      transform: scale(1);
+      transition: transform 8s ease-in-out;
+      /* zoom effect */
+    }
+
+    .carousel-item.active .hero-img {
+      transform: scale(1.1);
+    }
+
+    /* Overlay with light blue tint */
+    .carousel-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 123, 255, 0.35);
+      z-index: 1;
+    }
+
+    /* Center captions */
+    .carousel-caption {
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    /* Animations */
+    .fadeInDown {
+      animation: fadeInDown 1s ease forwards;
+    }
+
+    .fadeInUp {
+      animation: fadeInUp 1.2s ease forwards;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Button Glow */
+    .glow-btn {
+      border-radius: 30px;
+      padding: 10px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .glow-btn:hover {
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.7);
+      transform: scale(1.05);
+    }
+  </style>
+
+
+  <!-- About Section -->
+  <section id="about" class="py-5 about-section">
+    <div class="container">
+      <!-- Section Title -->
+      <div class="text-center mb-5" data-aos="fade-up">
+        <br>
+        <h2 class="fw-bold section-title">About Us</h2>
+        <p class="text-muted">Precision • Performance • Perfection</p>
+      </div>
+
+      <div class="row align-items-center">
+        <!-- Text Content -->
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+          <div class="glass-panel p-5 rounded shadow-sm">
+            <p class="lead">
+              <strong>ESSEM Threading Tools</strong> has been a global leader in
+              <span class="highlight">advanced machining solutions</span> for over three decades.
+              We empower manufacturers with precision tools that enhance productivity and guarantee superior
+              performance.
+            </p>
+
+            <p>
+              Our commitment is to innovation, quality, and reliability. From standard ISO tooling to custom-engineered
+              solutions, we serve clients across diverse industries, helping them achieve operational excellence.
+            </p>
+
+            <!-- Features List -->
+            <ul class="list-unstyled mt-4">
+              <li class="mb-3"><span class="icon-badge"><i class="bi bi-gear-fill"></i></span> ISO Turning Holders &
+                Milling Tools</li>
+              <li class="mb-3"><span class="icon-badge"><i class="bi bi-tools"></i></span> Inserts, Collets, Tool
+                Holders</li>
+              <li class="mb-3"><span class="icon-badge"><i class="bi bi-bullseye"></i></span> Gauges, Drills, Reamers,
+                Endmills</li>
+              <li class="mb-3"><span class="icon-badge"><i class="bi bi-lightning-charge-fill"></i></span> Custom
+                Engineered Tools</li>
+              <li class="mb-3"><span class="icon-badge"><i class="bi bi-globe"></i></span> Global Support & After-Sales
+                Services</li>
+            </ul>
+
+            <!-- Call-to-Action -->
+            <div class="mt-4">
+              <a href="#contact" class="btn btn-primary me-2">Get in Touch</a>
+              <a href="#products" class="btn btn-outline-primary">Explore Products</a>
+            </div>
+
+            <!-- Stats -->
+            <div class="row text-center mt-5">
+              <div class="col-6 col-md-3 mb-3" data-aos="zoom-in">
+                <h3 class="fw-bold counter" data-target="30">0</h3>
+                <p class="small">Years</p>
+              </div>
+              <div class="col-6 col-md-3 mb-3" data-aos="zoom-in" data-aos-delay="100">
+                <h3 class="fw-bold counter" data-target="500">0</h3>
+                <p class="small">Clients</p>
+              </div>
+              <div class="col-6 col-md-3 mb-3" data-aos="zoom-in" data-aos-delay="200">
+                <h3 class="fw-bold counter" data-target="1000">0</h3>
+                <p class="small">Products</p>
+              </div>
+              <div class="col-6 col-md-3 mb-3" data-aos="zoom-in" data-aos-delay="300">
+                <h3 class="fw-bold counter" data-target="25">0</h3>
+                <p class="small">Countries</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image / Gallery -->
+        <div class="col-lg-6 text-center" data-aos="fade-left">
+          <img src="images/products.jpg" alt="About ESSEM" class="img-fluid rounded shadow-lg about-img mb-3">
+          <p class="text-muted small">Delivering precision tools worldwide with commitment to quality</p>
+        </div>
+      </div>
+
+      <!-- Optional Additional Row: Why Choose Us -->
+      <div class="row mt-5 text-center" data-aos="fade-up">
+        <div class="col-md-4 mb-4">
+          <i class="bi bi-award fs-1 text-primary mb-2"></i>
+          <h5>Certified Quality</h5>
+          <p>All products adhere to international standards ensuring consistent performance.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <i class="bi bi-lightning-charge fs-1 text-primary mb-2"></i>
+          <h5>Innovative Solutions</h5>
+          <p>We focus on research and innovation to deliver the most efficient tools in the market.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <i class="bi bi-people fs-1 text-primary mb-2"></i>
+          <h5>Global Support</h5>
+          <p>Our expert team provides unmatched customer support and technical guidance worldwide.</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Products Section -->
-<section id="products" class="py-5 bg-light">
-  <div class="container">
-    <h2 class="section-title text-center">Our Products</h2>
-    <div class="row g-4">
-      <div class="col-md-3">
-        <div class="product-card">
-          <i class="fa-solid fa-gears"></i>
-          <h5>Turning Tools</h5>
-          <p>ISO Turning Holders, Top Clamping, Best Raw Material</p>
-        </div>
+  <!-- Updated CSS -->
+  <style>
+    /* Section Background */
+    .about-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #eaf3ff 100%);
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 2.8rem;
+      color: #002b6b;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: #007bff;
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    .highlight {
+      color: #007bff;
+      font-weight: 600;
+    }
+
+    /* Glass panel effect */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Image hover effect */
+    .about-img {
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .about-img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Icon badges */
+    .icon-badge i {
+      color: #007bff;
+      margin-right: 10px;
+    }
+
+    /* Feature Row */
+    .row.text-center i {
+      color: #007bff;
+    }
+  </style>
+
+  <!-- Counter Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const counters = document.querySelectorAll(".counter");
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const counter = entry.target;
+            const target = +counter.getAttribute("data-target");
+            let current = 0;
+            const step = target / 60;
+            const update = () => {
+              current += step;
+              if (current < target) {
+                counter.textContent = Math.floor(current) + "+";
+                requestAnimationFrame(update);
+              } else {
+                counter.textContent = target + "+";
+              }
+            };
+            update();
+            observer.unobserve(counter);
+          }
+        });
+      }, { threshold: 0.4 });
+
+      counters.forEach(c => observer.observe(c));
+    });
+  </script>
+
+
+  <!-- About Owner Section -->
+  <section id="owner" class="py-5" style="background: linear-gradient(135deg, #eaf3ff 0%, #f8f9fa 100%);">
+    <div class="container">
+      <!-- Section Title -->
+      <div class="text-center mb-5" data-aos="fade-up">
+        <h2 class="fw-bold section-title">Our Founder</h2>
+        <p class="text-muted">Meet the visionary behind ESSEM Threading Tools</p>
       </div>
-      <div class="col-md-3">
-        <div class="product-card">
-          <i class="fa-solid fa-screwdriver-wrench"></i>
-          <h5>Milling Tools</h5>
-          <p>Face Milling, Modular Milling, Ball Nose Cutters</p>
+
+      <div class="row align-items-center g-4">
+        <!-- Owner Image -->
+        <div class="col-md-4 text-center" data-aos="fade-right">
+          <div class="owner-img-wrapper position-relative d-inline-block rounded-circle overflow-hidden shadow-lg">
+            <img src="images/owner.jpg" alt="Owner" class="img-fluid rounded-circle">
+          </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="product-card">
-          <i class="fa-solid fa-cube"></i>
-          <h5>Inserts</h5>
-          <p>Turning, Milling, PCD & CBN Inserts</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="product-card">
-          <i class="fa-solid fa-toolbox"></i>
-          <h5>Tool Holders</h5>
-          <p>Collet Chuck, Face Mill Arbor, Shrink Fit Holders</p>
+
+        <!-- Owner Info -->
+        <div class="col-md-8" data-aos="fade-left">
+          <h4 class="fw-bold">Mr. Anbukumar</h4>
+          <p class="text-primary fst-italic mb-2">Founder & Managing Director</p>
+          <p class="text-muted">
+            With over 30 years of experience in precision tooling and machining, Mr. [Owner Name] has built ESSEM
+            Threading Tools into a globally trusted brand. His commitment to quality, innovation, and customer
+            satisfaction drives every product and solution we deliver.
+          </p>
+          <p class="text-muted">
+            Under his leadership, the company has expanded into multiple international markets, bringing advanced
+            machining solutions to manufacturers worldwide.
+          </p>
+
+          <!-- Social Links -->
+          <div class="mt-3">
+            <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="btn btn-outline-primary btn-sm"><i class="fab fa-whatsapp"></i></a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Clients Section -->
-<section id="clients" class="py-5">
-  <div class="container text-center">
-    <h2 class="section-title">Our Clients</h2>
-    <p>Trusted by leading global brands</p>
-    <img src="clients.png" alt="Clients" class="img-fluid">
-  </div>
-</section>
+  <!-- Additional CSS -->
+  <style>
+    #owner .section-title {
+      font-size: 2.5rem;
+      color: #002b6b;
+      position: relative;
+      display: inline-block;
+    }
 
-<!-- Contact Section -->
-<section id="contact" class="py-5 bg-light">
-  <div class="container">
-    <h2 class="section-title text-center">Contact Us</h2>
+    #owner .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: #007bff;
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    .owner-img-wrapper {
+      width: 250px;
+      height: 250px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .owner-img-wrapper:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    #owner p {
+      line-height: 1.7;
+    }
+
+    #owner .btn-outline-primary {
+      border-radius: 50px;
+      width: 45px;
+      height: 45px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    #owner .btn-outline-primary:hover {
+      background-color: #007bff;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .owner-img-wrapper {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+
+
+
+  <!-- Products Section -->
+  <section class="product-section container" id="products">
+    <!-- Section Title -->
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="fw-bold section-title">Our Products</h2>
+      <p class="text-muted">Precision tools and gauges for industrial applications</p>
+    </div>
+    <!-- Product Categories -->
     <div class="row">
-      <div class="col-md-6">
-        <form>
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Your Name" required>
+
+      <!-- Standard and Application Tools -->
+      <div class="col-12 mb-5">
+        <h4 class="category-header">Standard & Application Tools</h4>
+        <div class="row g-4">
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/taps.png" alt="Taps">
+              <h5 class="product-title">Taps</h5>
+              <p class="product-desc">Precision threading taps for multiple applications.</p>
+            </div>
           </div>
-          <div class="mb-3">
-            <input type="email" class="form-control" placeholder="Your Email" required>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/endmills.png" alt="Endmills">
+              <h5 class="product-title">End Mills</h5>
+              <p class="product-desc">End Mills & Ball Nose for steel, graphite, and aluminium.</p>
+            </div>
           </div>
-          <div class="mb-3">
-            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/drills.png" alt="Drills">
+              <h5 class="product-title">Drills</h5>
+              <p class="product-desc">High-quality drills for precision and durability.</p>
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary w-100">Send Message</button>
-        </form>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/reamers.png" alt="Reamers">
+              <h5 class="product-title">Reamers</h5>
+              <p class="product-desc">Reamers with excellent finish and accuracy.</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-md-6">
-        <h5>ESSEM Threading Tool Manufacturer</h5>
-        <p>No-14, 4th Street, Periyar Nagar, Irumbuliyur,<br>Tambaram West, Chennai-600 045</p>
-        <p><strong>Phone:</strong> +91 91767 81907 / +91 97879 38377</p>
-        <p><strong>Email:</strong> essemtools@gmail.com</p>
-        <div class="ratio ratio-16x9">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.463056622046!2d80.114!3d12.925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU1JzMwLjAiTiA4MMKwMDYnNDAuMCJF!5e0!3m2!1sen!2sin!4v1693400000000" 
-            width="100%" height="250" style="border:0;" allowfullscreen></iframe>
+
+      <!-- Shrink-Fit Tooling -->
+      <div class="col-12 mb-5">
+        <h4 class="category-header">Shrink-Fit Tooling</h4>
+        <div class="row g-4">
+          <div class="col-md-4 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/shrinkfit.png" alt="Shrink-Fit Tooling">
+              <h5 class="product-title">Modular Holders</h5>
+              <p class="product-desc">2-piece modular shrink-fit holders for deep machining and 5-axis operations.</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/microboring.png" alt="Micro Boring Head">
+              <h5 class="product-title">Micro Boring Head</h5>
+              <p class="product-desc">Lightweight, compact design for high precision boring.</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/anglehead.png" alt="Angle Head">
+              <h5 class="product-title">Angle Head</h5>
+              <p class="product-desc">Low-cost solution with flexible cutting angles up to 360°.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gauges -->
+      <div class="col-12 mb-5">
+        <h4 class="category-header">Gauges</h4>
+        <div class="row g-4">
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/threadplug.png" alt="Thread Plug & Ring Gauges">
+              <h5 class="product-title">Thread Plug & Ring</h5>
+              <p class="product-desc">Accurate measurement of threaded components.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/plainplug.png" alt="Plain & Plug Ring Gauges">
+              <h5 class="product-title">Plain & Plug Ring</h5>
+              <p class="product-desc">High-precision gauges for industrial use.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/snapgauges.png" alt="Snap Gauges">
+              <h5 class="product-title">Snap Gauges</h5>
+              <p class="product-desc">Reliable snap gauges for quick measurement.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/airplug.png" alt="Air Plug Gauges">
+              <h5 class="product-title">Air Plug Gauges</h5>
+              <p class="product-desc">Pneumatic measurement gauges for precision control.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CSS -->
+  <style>
+    /* =========================
+   Product Section
+========================= */
+    .product-section {
+      padding: 80px 20px;
+      /* added horizontal padding for smaller screens */
+    }
+
+    /* =========================
+   Category Header
+========================= */
+    .category-header {
+      background: linear-gradient(90deg, #0052cc, #1a73e8);
+      color: #fff;
+      padding: 12px 25px;
+      border-radius: 50px;
+      margin: 0 auto 30px;
+      /* centers the header */
+      font-weight: 600;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+
+    .category-header:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* =========================
+   Product Card
+========================= */
+    .product-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Overlay effect on hover */
+    .product-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(0, 123, 255, 0.05);
+      transform: rotate(45deg);
+      transition: all 0.5s ease;
+      opacity: 0;
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Hover Animation */
+    .product-card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Product Image */
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Product Title */
+    .product-title {
+      font-weight: 700;
+      color: #0d1b4c;
+      margin-bottom: 12px;
+      font-size: 1.25rem;
+      transition: color 0.3s ease;
+      text-align: center;
+      /* centered titles for uniform look */
+    }
+
+    .product-title:hover {
+      color: #0052cc;
+    }
+
+    /* Product Description */
+    .product-desc {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.6;
+      text-align: center;
+      /* description centered */
+    }
+
+    /* Optional Button */
+    .product-card .btn {
+      display: inline-block;
+      margin: 15px auto 0;
+      /* center the button */
+      background: #0052cc;
+      color: #fff;
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-align: center;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .product-card .btn:hover {
+      background: #1a73e8;
+      transform: translateY(-3px);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .product-section {
+        padding: 60px 15px;
+      }
+
+      .category-header {
+        font-size: 1rem;
+        padding: 10px 20px;
+      }
+
+      .product-card {
+        padding: 20px;
+      }
+    }
+  </style>
+
+
+  <!-- Clients Section with Swiper -->
+  <section id="clients" class="py-5" style="background: #f8f9fa;">
+    <div class="container text-center">
+      <br>
+      <h2 class="section-title mb-3" style="color: #002b6b; font-weight: 700;">Our Clients</h2>
+      <p class="text-muted mb-5" style="font-size: 1rem;">Trusted by leading global brands</p>
+
+      <!-- Swiper -->
+      <div class="swiper clients-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide client-logo">
+            <img src="client1.png" alt="Client 1">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client2.png" alt="Client 2">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client3.png" alt="Client 3">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client4.png" alt="Client 4">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client5.png" alt="Client 5">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client1.png" alt="Client 1">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client2.png" alt="Client 2">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client3.png" alt="Client 3">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client4.png" alt="Client 4">
+          </div>
+          <div class="swiper-slide client-logo">
+            <img src="client5.png" alt="Client 5">
+          </div>
+          <!-- Add more logos as needed -->
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Footer -->
-<footer class="text-center">
-  <p>&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
-  <p>
-    <a href="#"><i class="fab fa-facebook"></i></a>
-    <a href="#"><i class="fab fa-linkedin"></i></a>
-    <a href="#"><i class="fab fa-whatsapp"></i></a>
-  </p>
+  <!-- Initialize Swiper -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      new Swiper(".clients-swiper", {
+        slidesPerView: 5,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: {
+          delay: 2000,
+          disableOnInteraction: false,
+        },
+        breakpoints: {
+          320: { slidesPerView: 2, spaceBetween: 15 },
+          480: { slidesPerView: 3, spaceBetween: 20 },
+          768: { slidesPerView: 4, spaceBetween: 25 },
+          1024: { slidesPerView: 5, spaceBetween: 30 },
+        },
+      });
+    });
+  </script>
+
+  <!-- CSS -->
+  <style>
+    /* Clients Section */
+    #clients .client-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #clients .client-logo img {
+      max-width: 120px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    #clients .client-logo:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Swiper adjustments */
+    .clients-swiper {
+      padding-bottom: 20px;
+    }
+
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #clients .client-logo img {
+        max-width: 100px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #clients .client-logo img {
+        max-width: 80px;
+      }
+    }
+  </style>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-5" style="background: #eaf3ff;">
+    <div class="container">
+      <!-- Section Title -->
+      <div class="text-center mb-5" data-aos="fade-up">
+        <br>
+        <h2 class="fw-bold section-title">Frequently Asked Questions</h2>
+        <p class="text-muted">Answers to common queries about our products and services</p>
+      </div>
+
+      <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-delay="100">
+        <!-- FAQ Item 1 -->
+        <div class="accordion-item mb-3">
+          <h2 class="accordion-header" id="faqHeading1">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+              What types of threading tools do you offer?
+            </button>
+          </h2>
+          <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faqHeading1"
+            data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              We provide a wide range of precision threading tools, including taps, dies, reamers, drills, and
+              custom-engineered solutions for diverse industrial applications.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="accordion-item mb-3">
+          <h2 class="accordion-header" id="faqHeading2">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+              Do you provide global shipping?
+            </button>
+          </h2>
+          <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2"
+            data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes, ESSEM Threading Tools ships worldwide. We ensure that all products are carefully packaged and
+              delivered to maintain precision and quality.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="accordion-item mb-3">
+          <h2 class="accordion-header" id="faqHeading3">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+              Can I request custom tooling solutions?
+            </button>
+          </h2>
+          <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3"
+            data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Absolutely! We specialize in custom-engineered tools designed to meet your specific machining
+              requirements. Contact our technical team for guidance.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="accordion-item mb-3">
+          <h2 class="accordion-header" id="faqHeading4">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+              What industries do you serve?
+            </button>
+          </h2>
+          <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4"
+            data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Our tools are used across automotive, aerospace, manufacturing, and precision engineering industries
+              worldwide.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="accordion-item mb-3">
+          <h2 class="accordion-header" id="faqHeading5">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+              How can I contact ESSEM for support?
+            </button>
+          </h2>
+          <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5"
+            data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              You can reach us via phone at +91 91767 81907 / +91 97879 38377 or email at <a
+                href="mailto:essemtools@gmail.com">essemtools@gmail.com</a>. Our team is happy to assist you.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Optional CSS for FAQ -->
+  <style>
+    #faq .accordion-button {
+      background: #fff;
+      color: #002b6b;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    #faq .accordion-button:not(.collapsed) {
+      background: #007bff;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.2);
+    }
+
+    #faq .accordion-body {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    #faq .accordion-item {
+      border: none;
+      margin-bottom: 15px;
+    }
+  </style>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #eaf3ff 100%);">
+    <div class="container">
+      <!-- Section Title -->
+      <div class="text-center mb-5" data-aos="fade-up">
+        <br>
+        <h2 class="fw-bold section-title">Contact Us</h2>
+        <p class="text-muted">We’re here to assist you with your queries and orders</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Contact Form -->
+        <div class="col-lg-6" data-aos="fade-right">
+          <div class="card shadow-sm p-4 border-0">
+            <form>
+              <div class="mb-3 position-relative">
+                <i class="bi bi-person-fill position-absolute top-50 translate-middle-y ms-3 text-primary"></i>
+                <input type="text" class="form-control ps-5" placeholder="Your Name" required>
+              </div>
+              <div class="mb-3 position-relative">
+                <i class="bi bi-envelope-fill position-absolute top-50 translate-middle-y ms-3 text-primary"></i>
+                <input type="email" class="form-control ps-5" placeholder="Your Email" required>
+              </div>
+              <div class="mb-3 position-relative">
+                <i class="bi bi-chat-left-text-fill position-absolute top-0 mt-2 ms-3 text-primary"></i>
+                <textarea class="form-control ps-5 pt-4" rows="5" placeholder="Your Message" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 fw-bold">Send Message</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="border-0 p-4 h-100">
+            <h5 class="mb-3">ESSEM Threading Tool Manufacturer</h5>
+            <p class="mb-2"><i class="bi bi-geo-alt-fill text-primary me-2"></i>No-14, 4th Street,<br> Periyar Nagar,
+              Irumbuliyur,<br> Tambaram West, Chennai-600 045</p><br>
+            <p class="mb-2"><i class="bi bi-telephone-fill text-primary me-2"></i>+91 91767 81907 / +91 97879 38377</p>
+            <br>
+            <p class="mb-4"><i class="bi bi-envelope-fill text-primary me-2"></i><a
+                href="mailto:essemtools@gmail.com">essemtools@gmail.com</a></p><br>
+            <div class="ratio ratio-16x9 rounded overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.463056622046!2d80.114!3d12.925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU1JzMwLjAiTiA4MMKwMDYnNDAuMCJF!5e0!3m2!1sen!2sin!4v1693400000000"
+                width="100%" height="250" style="border:0;" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional CSS -->
+  <style>
+    #contact .section-title {
+      font-size: 2.5rem;
+      color: #002b6b;
+      position: relative;
+      display: inline-block;
+    }
+
+    #contact .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: #007bff;
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    #contact .card {
+      border-radius: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #contact .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    #contact .form-control {
+      border-radius: 10px;
+      height: 50px;
+    }
+
+    #contact textarea.form-control {
+      height: 120px;
+      resize: none;
+    }
+
+    #contact i {
+      font-size: 1.2rem;
+    }
+
+    #contact a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    #contact a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+
+
+
+<!-- Floating Social Media Widget -->
+<div class="social-float">
+  <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+  <a href="#" class="social-icon linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+  <a href="#" class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+</div>
+
+<!-- CSS -->
+<style>
+  .social-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+  }
+
+  .social-icon {
+    text-decoration: none;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #007bff, #00c6ff);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
+  }
+
+  .social-icon:hover {
+    transform: translateY(-10px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  }
+
+  /* Brand Colors */
+  .facebook { background: linear-gradient(45deg, #4267B2, #1E3C72); }
+  .linkedin { background: linear-gradient(45deg, #0077B5, #00A0DC); }
+  .whatsapp { background: linear-gradient(45deg, #25D366, #128C7E); }
+  .instagram { 
+    background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); 
+  }
+
+  /* Responsive tweak */
+  @media (max-width: 576px) {
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+    .social-float { gap: 10px; bottom: 15px; right: 15px; }
+  }
+</style>
+<!-- Floating Chat Bot Widget -->
+<div class="chat-widget" id="chatWidget">
+  <div class="chat-icon" id="chatIcon">
+    <i class="fas fa-robot"></i>
+  </div>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header">Chat with us</div>
+    <div class="chat-messages">
+      <p>Hello! How can we help you today?</p>
+    </div>
+    <textarea id="chatMessage" placeholder="Type your message..."></textarea>
+    <button id="sendChat">Send</button>
+  </div>
+</div>
+
+<style>
+  /* ==============================
+Floating Chat Bot Widget
+============================== */
+.chat-widget {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Chat Icon */
+.chat-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 1.5rem;
+}
+
+.chat-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+}
+
+/* Chat Box */
+.chat-box {
+  display: none; /* Hidden by default */
+  width: 320px;
+  max-width: 90vw;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  overflow: hidden;
+  margin-bottom: 10px;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Chat Header */
+.chat-header {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Chat Messages */
+.chat-messages {
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Chat Input */
+.chat-box textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-top: 1px solid #ddd;
+  outline: none;
+  resize: none;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+}
+
+/* Chat Send Button */
+.chat-box button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.chat-box button:hover {
+  background: linear-gradient(135deg, #0056b3, #0088ff);
+  transform: translateY(-2px);
+}
+
+/* Chat Message Styling */
+.chat-messages p {
+  background: #f1f1f1;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin: 5px 0;
+  max-width: 85%;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Scrollbar Styling */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .chat-box {
+    width: 260px;
+  }
+
+  .chat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}
+
+</style>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  (function() {
+    emailjs.init('TraCoJx_h__B6CoRO'); // Replace with your EmailJS user ID
+  })();
+
+  const chatIcon = document.getElementById('chatIcon');
+  const chatBox = document.getElementById('chatBox');
+  const sendChat = document.getElementById('sendChat');
+  const chatMessage = document.getElementById('chatMessage');
+  const chatMessages = document.querySelector('.chat-messages');
+
+  chatIcon.addEventListener('click', () => {
+    chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+  });
+
+  sendChat.addEventListener('click', () => {
+    const message = chatMessage.value.trim();
+    if (!message) return;
+
+    // Add message to chat box
+    const msgEl = document.createElement('p');
+    msgEl.textContent = message;
+    chatMessages.appendChild(msgEl);
+    chatMessage.value = '';
+
+    // Send email via EmailJS
+    emailjs.send('service_c2o76iv', 'template_sa6rdxk', {
+      message: message
+    }).then(() => {
+      alert('Message sent! We will get back to you soon.');
+    }, (err) => {
+      alert('Failed to send message. Try again.');
+      console.error(err);
+    });
+  });
+</script>
+
+  <!-- Footer -->
+<footer class="text-center text-white py-4">
+  <div class="container">
+    <p class="mb-2">&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
+    <p class="mb-2">
+      <a href="privacy.html" class="text-white text-decoration-none me-3">Privacy Policy</a> |
+      <a href="terms.html" class="text-white text-decoration-none ms-3">Terms & Conditions</a>
+    </p>
+    <p class="mb-0">
+      <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+      <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+      <a href="#" class="text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+    </p>
+  </div>
+  
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Optional Footer CSS -->
+<style>
+  footer a:hover {
+    color: #0d6efd;
+    text-decoration: underline;
+  }
+</style>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

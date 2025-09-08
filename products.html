@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESSEM Threading Tools - Products</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .product-section {
+      padding: 60px 0;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+    }
+    .product-title {
+      font-weight: 600;
+      color: #002b6b;
+      margin-bottom: 10px;
+    }
+    .product-desc {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .category-header {
+      background: #002b6b;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">ESSEM Threading Tools</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Products Section -->
+  <section class="product-section container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Our Products</h2>
+      <p class="text-muted">Precision tools and gauges for industrial applications</p>
+    </div>
+
+    <!-- Product Categories -->
+    <div class="row">
+
+      <!-- Standard and Application Tools -->
+      <div class="col-12 mb-5">
+        <h4 class="category-header">Standard & Application Tools</h4>
+        <div class="row g-4">
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/taps.png" alt="Taps">
+              <h5 class="product-title">Taps</h5>
+              <p class="product-desc">Precision threading taps for multiple applications.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/endmills.png" alt="Endmills">
+              <h5 class="product-title">End Mills</h5>
+              <p class="product-desc">End Mills & Ball Nose for steel, graphite, and aluminium.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/drills.png" alt="Drills">
+              <h5 class="product-title">Drills</h5>
+              <p class="product-desc">High-quality drills for precision and durability.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/reamers.png" alt="Reamers">
+              <h5 class="product-title">Reamers</h5>
+              <p class="product-desc">Reamers with excellent finish and accuracy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shrink-Fit Tooling -->
+      <div class="col-12 mb-5">
+        <h4 class="category-header">Shrink-Fit Tooling</h4>
+        <div class="row g-4">
+          <div class="col-md-4 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/shrinkfit.png" alt="Shrink-Fit Tooling">
+              <h5 class="product-title">Modular Holders</h5>
+              <p class="product-desc">2-piece modular shrink-fit holders for deep machining and 5-axis operations.</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/microboring.png" alt="Micro Boring Head">
+              <h5 class="product-title">Micro Boring Head</h5>
+              <p class="product-desc">Lightweight, compact design for high precision boring.</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/anglehead.png" alt="Angle Head">
+              <h5 class="product-title">Angle Head</h5>
+              <p class="product-desc">Low-cost solution with flexible cutting angles up to 360°.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gauges -->
+      <div class="col-12 mb-5">
+        <h4 class="category-header">Gauges</h4>
+        <div class="row g-4">
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/threadplug.png" alt="Thread Plug & Ring Gauges">
+              <h5 class="product-title">Thread Plug & Ring</h5>
+              <p class="product-desc">Accurate measurement of threaded components.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/plainplug.png" alt="Plain & Plug Ring Gauges">
+              <h5 class="product-title">Plain & Plug Ring</h5>
+              <p class="product-desc">High-precision gauges for industrial use.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/snapgauges.png" alt="Snap Gauges">
+              <h5 class="product-title">Snap Gauges</h5>
+              <p class="product-desc">Reliable snap gauges for quick measurement.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <div class="product-card text-center">
+              <img src="images/airplug.png" alt="Air Plug Gauges">
+              <h5 class="product-title">Air Plug Gauges</h5>
+              <p class="product-desc">Pneumatic measurement gauges for precision control.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-primary text-white text-center p-4">
+    <p>&copy; 2025 ESSEM Threading Tools. All Rights Reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSEM Threading Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- AOS CSS/JS (head or before script) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            /* ---------- 1) Init AOS (must run after AOS script loaded) ---------- */
+            if (window.AOS) {
+                AOS.init({ duration: 900, once: true, easing: 'ease-out-cubic' });
+            }
+
+            /* ---------- 2) Counter animation: trigger when visible using IntersectionObserver ---------- */
+            const counters = document.querySelectorAll('.counter');
+            if (counters.length) {
+                const counterObserver = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const target = parseInt(el.getAttribute('data-target') || el.textContent.replace(/\D/g, ''), 10) || 0;
+                            const duration = 1400; // ms
+                            let start = null;
+                            function step(timestamp) {
+                                if (!start) start = timestamp;
+                                const progress = Math.min((timestamp - start) / duration, 1);
+                                el.innerText = Math.floor(progress * target);
+                                if (progress < 1) {
+                                    requestAnimationFrame(step);
+                                } else {
+                                    el.innerText = target + '+';
+                                }
+                            }
+                            requestAnimationFrame(step);
+                            obs.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.4 });
+                counters.forEach(c => counterObserver.observe(c));
+            }
+
+            /* ---------- 3) Hero caption replay on carousel slide ---------- */
+            const heroCarousel = document.getElementById('heroCarousel');
+            function playCaptionAnimations(item) {
+                if (!item) return;
+                // add .play to each caption element and remove after animation ends (so it can replay later)
+                item.querySelectorAll('.fadeInDown, .fadeInUp').forEach((el) => {
+                    el.classList.remove('play');          // reset
+                    void el.offsetWidth;                  // reflow to allow re-add
+                    el.classList.add('play');             // triggers animation
+                    // remove .play after animation to prepare for next slide (duration + small buffer)
+                    const duration = parseFloat(getComputedStyle(el).animationDuration) || 1;
+                    setTimeout(() => el.classList.remove('play'), (duration * 1000) + 50);
+                });
+            }
+
+            // play animations for first active item immediately
+            const initialActive = document.querySelector('#heroCarousel .carousel-item.active');
+            if (initialActive) playCaptionAnimations(initialActive);
+
+            // Listen for Bootstrap carousel events (requires bootstrap.js loaded)
+            if (heroCarousel) {
+                heroCarousel.addEventListener('slid.bs.carousel', function (e) {
+                    const active = heroCarousel.querySelector('.carousel-item.active');
+                    playCaptionAnimations(active);
+                });
+            }
+
+            /* ---------- 4) Optional: ensure AOS refresh on dynamic changes ---------- */
+            if (window.AOS) {
+                setTimeout(() => AOS.refresh(), 600);
+            }
+        });
+    </script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            height: max-content !important;
+        }
+
+        .navbar .nav-link {
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .navbar .nav-link:hover {
+            color: #0056b3;
+            /* stylish blue hover */
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #02245B, #0d6efd);
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #02245B;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card i {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: #02245B;
+            color: white;
+            padding: 25px 0;
+        }
+
+        footer a {
+            color: #0d6efd;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Modern Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <!-- Brand Logo -->
+            <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid d-inline-block align-text-top"
+                style="height:48px; width:auto;padding: 0px;margin: 0px;">
+
+            <!-- Toggler -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Nav Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto fw-semibold">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="index.html#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="index.html#products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="index.html#clients">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mb-4">Terms & Conditions</h1>
+        <p>Welcome to <strong>ESSEM Threading Tools</strong>. By using our website, products, or services, you agree to
+            comply with the following terms and conditions:</p>
+
+        <h2 class="mt-4">1. Use of Website</h2>
+        <p>You agree to use our website for lawful purposes only. Unauthorized use, including hacking or disrupting the
+            website, is strictly prohibited.</p>
+
+        <h2 class="mt-4">2. Product Information</h2>
+        <p>All product descriptions and specifications are accurate to the best of our knowledge. However, slight
+            variations may occur, and we reserve the right to update product information.</p>
+
+        <h2 class="mt-4">3. Orders & Payments</h2>
+        <p>By placing an order, you agree to provide accurate information and make timely payments. All transactions are
+            subject to verification.</p>
+
+        <h2 class="mt-4">4. Liability</h2>
+        <p>ESSEM Threading Tools is not liable for any indirect or incidental damages arising from the use of our
+            website or products.</p>
+
+        <h2 class="mt-4">5. Intellectual Property</h2>
+        <p>All content, logos, and materials on this website are protected by copyright and intellectual property laws.
+            Unauthorized use is prohibited.</p>
+
+        <h2 class="mt-4">6. Changes to Terms</h2>
+        <p>We may revise these terms and conditions at any time. Users are encouraged to review this page periodically
+            for updates.</p>
+
+        <h2 class="mt-4">7. Contact</h2>
+        <p>For any queries regarding these terms, contact us at <a
+                href="mailto:essemtools@gmail.com">essemtools@gmail.com</a>.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-white py-4">
+        <div class="container">
+            <p class="mb-2">&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
+            <p class="mb-2">
+                <a href="privacy.html" class="text-white text-decoration-none me-3">Privacy Policy</a> |
+                <a href="terms.html" class="text-white text-decoration-none ms-3">Terms & Conditions</a>
+            </p>
+            <p class="mb-0">
+                <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+            </p>
+        </div>
+
+    </footer>
+
+    <!-- Optional Footer CSS -->
+    <style>
+        footer a:hover {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+    </style>
+
+</body>
+
+</html>
