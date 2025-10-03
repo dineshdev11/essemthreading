@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services - ESSEM Threading Tools</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-blue: #02245B;
+      --accent-blue: #0d6efd;
+      --light-blue: #eaf3ff;
+    }
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+    }
+    
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    
+    .navbar-brand img {
+      height: 48px;
+      width: auto;
+    }
+    
+    .navbar-nav .nav-link {
+      color: #333;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      margin: 0 0.25rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      color: var(--accent-blue);
+      background-color: rgba(13, 110, 253, 0.05);
+    }
+    
+    .navbar-nav .nav-link.active {
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+    
+    .navbar-nav .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 1rem;
+      right: 1rem;
+      height: 2px;
+      background-color: var(--accent-blue);
+    }
+    
+    .page-hero {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white;
+      padding: 100px 0 60px;
+      text-align: center;
+    }
+    
+    .page-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .page-hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .section-title {
+      font-weight: bold;
+      color: var(--primary-blue);
+      margin-bottom: 30px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: var(--accent-blue);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+    
+    .services-section {
+      padding: 80px 0;
+    }
+    
+    .service-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      height: 100%;
+    }
+    
+    .service-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(0, 123, 255, 0.05);
+      transform: rotate(45deg);
+      transition: all 0.5s ease;
+      opacity: 0;
+    }
+    
+    .service-card:hover::before {
+      opacity: 1;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .service-icon {
+      font-size: 3.5rem;
+      color: var(--accent-blue);
+      margin-bottom: 25px;
+      transition: transform 0.3s ease;
+    }
+    
+    .service-card:hover .service-icon {
+      transform: scale(1.1);
+    }
+    
+    .service-title {
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      transition: color 0.3s ease;
+    }
+    
+    .service-desc {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    
+    .service-features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    
+    .service-features li {
+      padding: 8px 0;
+      position: relative;
+      padding-left: 30px;
+    }
+    
+    .service-features li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--accent-blue);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .btn-service {
+      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-service:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+      color: white;
+    }
+    
+    .process-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
+      padding: 80px 0;
+    }
+    
+    .process-step {
+      text-align: center;
+      padding: 30px 20px;
+    }
+    
+    .step-number {
+      width: 60px;
+      height: 60px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0 auto 20px;
+    }
+    
+    .step-title {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 15px;
+    }
+    
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
+    
+    .cta-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    footer {
+      background: var(--primary-blue);
+      color: white;
+      padding: 40px 0 20px;
+    }
+    
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    footer a:hover {
+      color: var(--accent-blue);
+    }
+    
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .service-card {
+        padding: 30px 20px;
+      }
+      
+      .service-icon {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Modern Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container">
+      <!-- Brand Logo -->
+      <a class="navbar-brand" href="index.html">
+        <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid">
+      </a>
+
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav Links -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto fw-semibold">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">ABOUT US</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="products.html">PRODUCTS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="services.html">SERVICES</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">CONTACT US</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1 data-aos="fade-down">Our Services</h1>
+      <p data-aos="fade-up" data-aos-delay="200">Comprehensive machining solutions to optimize your manufacturing processes</p>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center mb-5" data-aos="fade-up">
+          <h2 class="section-title">Our Comprehensive Services</h2>
+          <p class="text-muted">End-to-end solutions for all your manufacturing needs</p>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Turn Key Solutions -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
+          <div class="service-card">
+            <i class="fas fa-key service-icon"></i>
+            <h3 class="service-title">Turn Key Solutions</h3>
+            <p class="service-desc">Complete project management from concept to final implementation, ensuring seamless integration and optimal performance.</p>
+            <ul class="service-features">
+              <li>End-to-end project management</li>
+              <li>Equipment selection & installation</li>
+              <li>Process optimization</li>
+              <li>Training & documentation</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Fixturing Solutions -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="service-card">
+            <i class="fas fa-tools service-icon"></i>
+            <h3 class="service-title">Fixturing Solutions</h3>
+            <p class="service-desc">Custom workholding solutions designed to maximize productivity, accuracy, and repeatability in your machining operations.</p>
+            <ul class="service-features">
+              <li>Custom fixture design</li>
+              <li>Quick-change systems</li>
+              <li>Modular fixturing</li>
+              <li>Prototype development</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Special Tools Design and Development -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="service-card">
+            <i class="fas fa-hammer service-icon"></i>
+            <h3 class="service-title">Special Tools Design & Development</h3>
+            <p class="service-desc">Custom tooling solutions engineered for specific applications, materials, and production requirements.</p>
+            <ul class="service-features">
+              <li>CAD/CAM design</li>
+              <li>Prototype testing</li>
+              <li>Performance optimization</li>
+              <li>Technical documentation</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Component Costing and Cycle Time -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
+          <div class="service-card">
+            <i class="fas fa-calculator service-icon"></i>
+            <h3 class="service-title">Component Costing & Cycle Time</h3>
+            <p class="service-desc">Detailed analysis and optimization of manufacturing costs and production cycle times for improved profitability.</p>
+            <ul class="service-features">
+              <li>Cost analysis & optimization</li>
+              <li>Cycle time reduction</li>
+              <li>Process efficiency studies</li>
+              <li>ROI calculations</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Branded Cutting Tools for Specialised -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="service-card">
+            <i class="fas fa-cut service-icon"></i>
+            <h3 class="service-title">Branded Cutting Tools for Specialised Applications</h3>
+            <p class="service-desc">Premium cutting tools from leading brands, selected and optimized for your specific machining requirements.</p>
+            <ul class="service-features">
+              <li>Tool selection guidance</li>
+              <li>Application optimization</li>
+              <li>Performance testing</li>
+              <li>Technical support</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Lubricant Solutions -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="service-card">
+            <i class="fas fa-oil-can service-icon"></i>
+            <h3 class="service-title">Lubricant Solutions</h3>
+            <p class="service-desc">Comprehensive lubrication solutions to enhance tool life, improve surface finish, and optimize machining performance.</p>
+            <ul class="service-features">
+              <li>Coolant selection</li>
+              <li>Lubricant optimization</li>
+              <li>Filtration systems</li>
+              <li>Maintenance programs</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Estimation -->
+        <div class="col-lg-4 col-md-6 mb-4 mx-auto" data-aos="fade-up" data-aos-delay="0">
+          <div class="service-card">
+            <i class="fas fa-chart-line service-icon"></i>
+            <h3 class="service-title">Estimation</h3>
+            <p class="service-desc">Accurate project estimation services including material costs, machining time, tooling requirements, and overall project budgeting.</p>
+            <ul class="service-features">
+              <li>Detailed cost estimates</li>
+              <li>Timeline projections</li>
+              <li>Resource planning</li>
+              <li>Budget optimization</li>
+            </ul>
+            <button class="btn btn-service">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="process-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center mb-5" data-aos="fade-up">
+          <h2 class="section-title">Our Service Process</h2>
+          <p class="text-muted">A systematic approach to delivering exceptional results</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="0">
+          <div class="process-step">
+            <div class="step-number">1</div>
+            <h4 class="step-title">Consultation</h4>
+            <p>Understanding your requirements, challenges, and objectives through detailed discussions.</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="process-step">
+            <div class="step-number">2</div>
+            <h4 class="step-title">Analysis</h4>
+            <p>Comprehensive assessment of your current processes and identification of improvement opportunities.</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="process-step">
+            <div class="step-number">3</div>
+            <h4 class="step-title">Solution Design</h4>
+            <p>Developing customized solutions tailored to your specific needs and operational constraints.</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="process-step">
+            <div class="step-number">4</div>
+            <h4 class="step-title">Implementation</h4>
+            <p>Seamless execution with continuous support and optimization to ensure desired outcomes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12" data-aos="fade-up">
+          <h2 class="cta-title">Ready to Optimize Your Manufacturing?</h2>
+          <p class="mb-4">Let our experts help you improve efficiency, reduce costs, and enhance quality</p>
+          <a href="contact.html" class="btn btn-light btn-lg me-3">Get Free Consultation</a>
+          <a href="tel:+919176781907" class="btn btn-outline-light btn-lg">Call Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <h5>ESSEM Threading Tools</h5>
+          <p>Precision tools and machining solutions for global industries.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5>Contact Info</h5>
+          <p><i class="fas fa-map-marker-alt me-2"></i> No-14, 4th Street, Periyar Nagar, Irumbuliyur, Tambaram West, Chennai-600 045</p>
+          <p><i class="fas fa-phone me-2"></i> +91 91767 81907 / +91 97879 38377</p>
+          <p><i class="fas fa-envelope me-2"></i> <a href="mailto:essemtools@gmail.com">essemtools@gmail.com</a></p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5>Quick Links</h5>
+          <p><a href="index.html">Home</a></p>
+          <p><a href="about.html">About Us</a></p>
+          <p><a href="products.html">Products</a></p>
+          <p><a href="services.html">Services</a></p>
+          <p><a href="contact.html">Contact</a></p>
+        </div>
+      </div>
+      <div class="row pt-3">
+        <div class="col-12 text-center">
+          <p>&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-out-cubic'
+    });
+  </script>
+</body>
+</html>

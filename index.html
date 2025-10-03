@@ -93,73 +93,299 @@
   </script>
 
   <style>
+    :root {
+      --primary-blue: #02245B;
+      --accent-blue: #0d6efd;
+      --light-blue: #eaf3ff;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
+      color: #333;
     }
 
     .navbar {
-      height: max-content !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      border-top: 6px solid rgb(124, 132, 251);
     }
 
-    .navbar .nav-link {
-      transition: color 0.3s ease, border-bottom 0.3s ease;
-      border-bottom: 2px solid transparent;
+    .navbar-brand img {
+      height: 68px;
+      width: auto;
     }
 
-    .navbar .nav-link:hover {
-      color: #0056b3;
-      /* stylish blue hover */
-      border-bottom: 2px solid #0056b3;
+    .navbar-nav .nav-link {
+      color: #333;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      margin: 0 0.25rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
     }
 
-    .hero {
-      background: linear-gradient(135deg, #02245B, #0d6efd);
+    .navbar-nav .nav-link:hover {
+      color: var(--accent-blue);
+      background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .navbar-nav .nav-link.active {
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .navbar-nav .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 1rem;
+      right: 1rem;
+      height: 2px;
+      background-color: var(--accent-blue);
+    }
+
+    .page-hero {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
       color: white;
-      padding: 120px 0;
+      padding: 100px 0 60px;
       text-align: center;
     }
 
-    .hero h1 {
-      font-size: 3rem;
-      font-weight: bold;
+    .page-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .page-hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
     .section-title {
       font-weight: bold;
-      color: #02245B;
+      color: var(--primary-blue);
       margin-bottom: 30px;
+      position: relative;
+      display: inline-block;
     }
 
-    .product-card {
-      border: none;
-      border-radius: 12px;
-      padding: 25px;
-      text-align: center;
-      background: #fff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: var(--accent-blue);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    .contact-section {
+      padding: 80px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
+    }
+
+    .contact-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      height: 100%;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px 15px;
+      border: 2px solid #e9ecef;
       transition: all 0.3s ease;
     }
 
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    .form-control:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
     }
 
-    .product-card i {
-      font-size: 2.5rem;
-      color: #0d6efd;
-      margin-bottom: 15px;
+    .form-label {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 8px;
+    }
+
+    .btn-contact {
+      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-contact:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+      color: white;
+    }
+
+    .contact-info {
+      padding: 20px 0;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(13, 110, 253, 0.05);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .contact-item:hover {
+      background: rgba(13, 110, 253, 0.1);
+      transform: translateX(5px);
+    }
+
+    .contact-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .contact-details h4 {
+      color: var(--primary-blue);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .contact-details p {
+      color: #555;
+      margin: 0;
+    }
+
+    .contact-details a {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .contact-details a:hover {
+      color: var(--accent-blue);
+    }
+
+    .map-container {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      height: 400px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .social-link {
+      width: 45px;
+      height: 45px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px);
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .business-hours {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      margin-top: 30px;
+    }
+
+    .hours-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .hours-item:last-child {
+      border-bottom: none;
+    }
+
+    .alert {
+      border-radius: 10px;
+      border: none;
+      padding: 15px 20px;
+    }
+
+    .alert-success {
+      background: #d1edff;
+      color: var(--primary-blue);
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .alert-danger {
+      background: #ffe6e6;
+      color: #dc3545;
+      border-left: 4px solid #dc3545;
     }
 
     footer {
-      background: #02245B;
+      background: var(--primary-blue);
       color: white;
-      padding: 25px 0;
+      padding: 40px 0 20px;
     }
 
     footer a {
-      color: #0d6efd;
-      margin: 0 10px;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent-blue);
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .contact-card {
+        padding: 30px 20px;
+      }
+
+      .contact-item {
+        padding: 15px;
+      }
     }
   </style>
 </head>
@@ -167,36 +393,58 @@
 <body>
 
   <!-- Modern Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
     <div class="container">
       <!-- Brand Logo -->
-      <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid d-inline-block align-text-top"
-        style="height:48px; width:auto;padding: 0px;margin: 0px;">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid">
+      </a>
 
       <!-- Toggler -->
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- Nav Links -->
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto fw-semibold">
+        <ul class="navbar-nav mx-auto fw-semibold">
           <li class="nav-item">
-            <a class="nav-link px-3 active" href="#home">Home</a>
+            <a class="nav-link active" href="index.html">HOME</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link px-3" href="#about">About</a>
+            <a class="nav-link" href="about.html">ABOUT US</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link px-3" href="#products">Products</a>
+            <a class="nav-link" href="products.html">PRODUCTS</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link px-3" href="#clients">Clients</a>
+            <a class="nav-link" href="services.html">SERVICES</a>
           </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="ESSEM-TOOLS-PRODUCTS.pdf">DOWNLOADS</a>
+          </li> -->
           <li class="nav-item">
-            <a class="nav-link px-3" href="#contact">Contact</a>
+            <a class="nav-link" href="contact.html">CONTACT US</a>
           </li>
+                   <!-- Call Button -->
+      <a href="tel:+919176781907" class="call-button" style="background: linear-gradient(135deg, #00c6ff, #0072ff);
+     color: #fff;
+     padding: 12px 20px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: bold;
+     font-size: 16px;
+     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+     z-index: 9999;
+     transition: transform 0.2s, box-shadow 0.2s;
+     bottom: 20px;
+     right: 20px;
+     margin-left: 200px;
+     ">
+        <i class="bi bi-telephone-fill"></i> +91 91767 81907
+      </a>
         </ul>
+
       </div>
     </div>
   </nav>
@@ -204,58 +452,131 @@
 
 
 
-  <!-- Hero Carousel -->
-  <section id="home">
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
 
-      <!-- Indicators -->
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
-      </div>
+<!-- Hero Carousel -->
+<section id="home">
+  <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
 
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="images/industry1.jpg" class="d-block w-100 hero-img" alt="Machinery">
-          <div class="carousel-overlay"></div>
-          <div class="carousel-caption animate-caption">
-            <h1 class="display-4 fw-bold text-white fadeInDown">ESSEM Threading Tools</h1>
-            <p class="lead text-light fadeInUp">Complete Machining Solutions with Best Services & Support</p>
-            <a href="#products" class="btn btn-primary btn-lg mt-3 glow-btn">Explore Products</a>
-          </div>
-        </div>
-
-        <div class="carousel-item">
-          <img src="images/industry2.jpg" class="d-block w-100 hero-img" alt="Tools">
-          <div class="carousel-overlay"></div>
-          <div class="carousel-caption animate-caption">
-            <h1 class="display-4 fw-bold text-white fadeInDown">Precision Engineering</h1>
-            <p class="lead text-light fadeInUp">High-quality threading tools built for performance</p>
-            <a href="#about" class="btn btn-outline-light btn-lg mt-3 glow-btn">Learn More</a>
-          </div>
-        </div>
-
-        <div class="carousel-item">
-          <img src="images/industry3.jpg" class="d-block w-100 hero-img" alt="Manufacturing">
-          <div class="carousel-overlay"></div>
-          <div class="carousel-caption animate-caption">
-            <h1 class="display-4 fw-bold text-white fadeInDown">Global Manufacturing Support</h1>
-            <p class="lead text-light fadeInUp">Trusted worldwide for precision and durability</p>
-            <a href="#contact" class="btn btn-warning btn-lg mt-3 glow-btn">Contact Us</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controls -->
-      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="5"></button>
     </div>
-  </section>
+
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="images/industry1.jpg" class="d-block w-100 hero-img" alt="Cutting Tools">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-caption animate-caption">
+          <h1 class="display-4 fw-bold text-white fadeInDown">CUTTING TOOLS</h1>
+          <p class="lead text-light fadeInUp">High precision cutting tools for all industries</p>
+          <div class="button-group mt-3">
+            <a href="#contact" class="btn btn-primary btn-lg glow-btn">Contact Us</a>
+            <a href="#products" class="btn btn-outline-light btn-lg glow-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="images/industry2.jpg" class="d-block w-100 hero-img" alt="Tool Holdings">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-caption animate-caption">
+          <h1 class="display-4 fw-bold text-white fadeInDown">TOOL HOLDINGS</h1>
+          <p class="lead text-light fadeInUp">Secure and precise tool holding solutions</p>
+          <div class="button-group mt-3">
+            <a href="#contact" class="btn btn-primary btn-lg glow-btn">Contact Us</a>
+            <a href="#products" class="btn btn-outline-light btn-lg glow-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="images/industry3.jpg" class="d-block w-100 hero-img" alt="Work Holdings">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-caption animate-caption">
+          <h1 class="display-4 fw-bold text-white fadeInDown">WORK HOLDINGS</h1>
+          <p class="lead text-light fadeInUp">Reliable solutions to hold workpieces efficiently</p>
+          <div class="button-group mt-3">
+            <a href="#contact" class="btn btn-primary btn-lg glow-btn">Contact Us</a>
+            <a href="#products" class="btn btn-outline-light btn-lg glow-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="images/industry4.jpg" class="d-block w-100 hero-img" alt="Industrial Lubricant">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-caption animate-caption">
+          <h1 class="display-4 fw-bold text-white fadeInDown">INDUSTRIAL LUBRICANT</h1>
+          <p class="lead text-light fadeInUp">Top-quality lubricants for smooth operations</p>
+          <div class="button-group mt-3">
+            <a href="#contact" class="btn btn-primary btn-lg glow-btn">Contact Us</a>
+            <a href="#products" class="btn btn-outline-light btn-lg glow-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="images/industry5.jpg" class="d-block w-100 hero-img" alt="Coolant Filtration System">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-caption animate-caption">
+          <h1 class="display-4 fw-bold text-white fadeInDown">COOLANT FILTRATION SYSTEM</h1>
+          <p class="lead text-light fadeInUp">Efficient cooling and filtration systems for machines</p>
+          <div class="button-group mt-3">
+            <a href="#contact" class="btn btn-primary btn-lg glow-btn">Contact Us</a>
+            <a href="#products" class="btn btn-outline-light btn-lg glow-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <img src="images/industry6.jpg" class="d-block w-100 hero-img" alt="Measuring Instruments">
+        <div class="carousel-overlay"></div>
+        <div class="carousel-caption animate-caption">
+          <h1 class="display-4 fw-bold text-white fadeInDown">MEASURING INSTRUMENTS</h1>
+          <p class="lead text-light fadeInUp">Accurate instruments for precise measurements</p>
+          <div class="button-group mt-3">
+            <a href="#contact" class="btn btn-primary btn-lg glow-btn">Contact Us</a>
+            <a href="#products" class="btn btn-outline-light btn-lg glow-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</section>
+
+<style>
+.button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .button-group .btn {
+    width: 200px;
+  }
+}
+</style>
+
 
   <style>
     /* Fullscreen hero */
@@ -1238,278 +1559,299 @@
 
 
 
-<!-- Floating Social Media Widget -->
-<div class="social-float">
-  <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-  <a href="#" class="social-icon linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-  <a href="#" class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
-  <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-</div>
+  <!-- Floating Social Media Widget -->
+  <div class="social-float">
+    <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-icon linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="#" class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+  </div>
 
-<!-- CSS -->
-<style>
-  .social-float {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 1000;
-  }
-
-  .social-icon {
-    text-decoration: none;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 1.2rem;
-    border-radius: 50%;
-    background: linear-gradient(45deg, #007bff, #00c6ff);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
-  }
-
-  .social-icon:hover {
-    transform: translateY(-10px) scale(1.1);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-  }
-
-  /* Brand Colors */
-  .facebook { background: linear-gradient(45deg, #4267B2, #1E3C72); }
-  .linkedin { background: linear-gradient(45deg, #0077B5, #00A0DC); }
-  .whatsapp { background: linear-gradient(45deg, #25D366, #128C7E); }
-  .instagram { 
-    background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); 
-  }
-
-  /* Responsive tweak */
-  @media (max-width: 576px) {
-    .social-icon {
-      width: 40px;
-      height: 40px;
-      font-size: 1rem;
+  <!-- CSS -->
+  <style>
+    .social-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
     }
-    .social-float { gap: 10px; bottom: 15px; right: 15px; }
-  }
-</style>
-<!-- Floating Chat Bot Widget -->
-<div class="chat-widget" id="chatWidget">
-  <div class="chat-icon" id="chatIcon">
-    <i class="fas fa-robot"></i>
-  </div>
-  <div class="chat-box" id="chatBox">
-    <div class="chat-header">Chat with us</div>
-    <div class="chat-messages">
-      <p>Hello! How can we help you today?</p>
-    </div>
-    <textarea id="chatMessage" placeholder="Type your message..."></textarea>
-    <button id="sendChat">Send</button>
-  </div>
-</div>
 
-<style>
-  /* ==============================
+    .social-icon {
+      text-decoration: none;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #007bff, #00c6ff);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-10px) scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Brand Colors */
+    .facebook {
+      background: linear-gradient(45deg, #4267B2, #1E3C72);
+    }
+
+    .linkedin {
+      background: linear-gradient(45deg, #0077B5, #00A0DC);
+    }
+
+    .whatsapp {
+      background: linear-gradient(45deg, #25D366, #128C7E);
+    }
+
+    .instagram {
+      background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+    }
+
+    /* Responsive tweak */
+    @media (max-width: 576px) {
+      .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .social-float {
+        gap: 10px;
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+  </style>
+  <!-- Floating Chat Bot Widget -->
+  <div class="chat-widget" id="chatWidget">
+    <div class="chat-icon" id="chatIcon">
+      <i class="fas fa-robot"></i>
+    </div>
+    <div class="chat-box" id="chatBox">
+      <div class="chat-header">Chat with us</div>
+      <div class="chat-messages">
+        <p>Hello! How can we help you today?</p>
+      </div>
+      <textarea id="chatMessage" placeholder="Type your message..."></textarea>
+      <button id="sendChat">Send</button>
+    </div>
+  </div>
+
+  <style>
+    /* ==============================
 Floating Chat Bot Widget
 ============================== */
-.chat-widget {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 1000;
-  font-family: 'Segoe UI', sans-serif;
-}
+    .chat-widget {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-/* Chat Icon */
-.chat-icon {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-size: 1.5rem;
-}
+    /* Chat Icon */
+    .chat-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      font-size: 1.5rem;
+    }
 
-.chat-icon:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-}
+    .chat-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    }
 
-/* Chat Box */
-.chat-box {
-  display: none; /* Hidden by default */
-  width: 320px;
-  max-width: 90vw;
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  overflow: hidden;
-  margin-bottom: 10px;
-  flex-direction: column;
-  animation: fadeIn 0.3s ease forwards;
-}
+    /* Chat Box */
+    .chat-box {
+      display: none;
+      /* Hidden by default */
+      width: 320px;
+      max-width: 90vw;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      margin-bottom: 10px;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease forwards;
+    }
 
-/* Chat Header */
-.chat-header {
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  text-align: center;
-  font-size: 1rem;
-}
+    /* Chat Header */
+    .chat-header {
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: white;
+      padding: 12px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1rem;
+    }
 
-/* Chat Messages */
-.chat-messages {
-  padding: 10px;
-  max-height: 200px;
-  overflow-y: auto;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  border-bottom: 1px solid #ddd;
-}
+    /* Chat Messages */
+    .chat-messages {
+      padding: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      border-bottom: 1px solid #ddd;
+    }
 
-/* Chat Input */
-.chat-box textarea {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-top: 1px solid #ddd;
-  outline: none;
-  resize: none;
-  box-sizing: border-box;
-  font-size: 0.9rem;
-}
+    /* Chat Input */
+    .chat-box textarea {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-top: 1px solid #ddd;
+      outline: none;
+      resize: none;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+    }
 
-/* Chat Send Button */
-.chat-box button {
-  width: 100%;
-  padding: 10px;
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s, transform 0.3s;
-}
+    /* Chat Send Button */
+    .chat-box button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.3s;
+    }
 
-.chat-box button:hover {
-  background: linear-gradient(135deg, #0056b3, #0088ff);
-  transform: translateY(-2px);
-}
+    .chat-box button:hover {
+      background: linear-gradient(135deg, #0056b3, #0088ff);
+      transform: translateY(-2px);
+    }
 
-/* Chat Message Styling */
-.chat-messages p {
-  background: #f1f1f1;
-  padding: 8px 12px;
-  border-radius: 12px;
-  margin: 5px 0;
-  max-width: 85%;
-}
+    /* Chat Message Styling */
+    .chat-messages p {
+      background: #f1f1f1;
+      padding: 8px 12px;
+      border-radius: 12px;
+      margin: 5px 0;
+      max-width: 85%;
+    }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px);}
-  to { opacity: 1; transform: translateY(0);}
-}
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
 
-/* Scrollbar Styling */
-.chat-messages::-webkit-scrollbar {
-  width: 6px;
-}
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-.chat-messages::-webkit-scrollbar-thumb {
-  background: #007bff;
-  border-radius: 3px;
-}
+    /* Scrollbar Styling */
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .chat-box {
-    width: 260px;
-  }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #007bff;
+      border-radius: 3px;
+    }
 
-  .chat-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-  }
-}
+    /* Responsive */
+    @media (max-width: 480px) {
+      .chat-box {
+        width: 260px;
+      }
 
-</style>
+      .chat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
 
-<!-- EmailJS SDK -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  (function() {
-    emailjs.init('TraCoJx_h__B6CoRO'); // Replace with your EmailJS user ID
-  })();
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init('TraCoJx_h__B6CoRO'); // Replace with your EmailJS user ID
+    })();
 
-  const chatIcon = document.getElementById('chatIcon');
-  const chatBox = document.getElementById('chatBox');
-  const sendChat = document.getElementById('sendChat');
-  const chatMessage = document.getElementById('chatMessage');
-  const chatMessages = document.querySelector('.chat-messages');
+    const chatIcon = document.getElementById('chatIcon');
+    const chatBox = document.getElementById('chatBox');
+    const sendChat = document.getElementById('sendChat');
+    const chatMessage = document.getElementById('chatMessage');
+    const chatMessages = document.querySelector('.chat-messages');
 
-  chatIcon.addEventListener('click', () => {
-    chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
-  });
-
-  sendChat.addEventListener('click', () => {
-    const message = chatMessage.value.trim();
-    if (!message) return;
-
-    // Add message to chat box
-    const msgEl = document.createElement('p');
-    msgEl.textContent = message;
-    chatMessages.appendChild(msgEl);
-    chatMessage.value = '';
-
-    // Send email via EmailJS
-    emailjs.send('service_c2o76iv', 'template_sa6rdxk', {
-      message: message
-    }).then(() => {
-      alert('Message sent! We will get back to you soon.');
-    }, (err) => {
-      alert('Failed to send message. Try again.');
-      console.error(err);
+    chatIcon.addEventListener('click', () => {
+      chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
     });
-  });
-</script>
+
+    sendChat.addEventListener('click', () => {
+      const message = chatMessage.value.trim();
+      if (!message) return;
+
+      // Add message to chat box
+      const msgEl = document.createElement('p');
+      msgEl.textContent = message;
+      chatMessages.appendChild(msgEl);
+      chatMessage.value = '';
+
+      // Send email via EmailJS
+      emailjs.send('service_c2o76iv', 'template_sa6rdxk', {
+        message: message
+      }).then(() => {
+        alert('Message sent! We will get back to you soon.');
+      }, (err) => {
+        alert('Failed to send message. Try again.');
+        console.error(err);
+      });
+    });
+  </script>
 
   <!-- Footer -->
-<footer class="text-center text-white py-4">
-  <div class="container">
-    <p class="mb-2">&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
-    <p class="mb-2">
-      <a href="privacy.html" class="text-white text-decoration-none me-3">Privacy Policy</a> |
-      <a href="terms.html" class="text-white text-decoration-none ms-3">Terms & Conditions</a>
-    </p>
-    <p class="mb-0">
-      <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
-      <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a>
-      <a href="#" class="text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
-    </p>
-  </div>
-  
-</footer>
+  <footer class="text-center text-white py-4">
+    <div class="container">
+      <p class="mb-2">&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
+      <p class="mb-2">
+        <a href="privacy.html" class="text-white text-decoration-none me-3">Privacy Policy</a> |
+        <a href="terms.html" class="text-white text-decoration-none ms-3">Terms & Conditions</a>
+      </p>
+      <p class="mb-0">
+        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+        <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+        <a href="#" class="text-white"><i class="fab fa-whatsapp fa-lg"></i></a>
+      </p>
+    </div>
 
-<!-- Optional Footer CSS -->
-<style>
-  footer a:hover {
-    color: #0d6efd;
-    text-decoration: underline;
-  }
-</style>
+  </footer>
+
+  <!-- Optional Footer CSS -->
+  <style>
+    footer a:hover {
+      color: #0d6efd;
+      text-decoration: underline;
+    }
+  </style>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
