@@ -1,37 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Products - ESSEM Threading Tools</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <!-- AOS CSS -->
+  <title>Product Catalog - ESSEM Threading Tools</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- AOS CSS/JS (head or before script) -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 1000, once: true });</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      /* ---------- 1) Init AOS (must run after AOS script loaded) ---------- */
+      if (window.AOS) {
+        AOS.init({ duration: 900, once: true, easing: 'ease-out-cubic' });
+      }
+
+      /* ---------- 2) Counter animation: trigger when visible using IntersectionObserver ---------- */
+      const counters = document.querySelectorAll('.counter');
+      if (counters.length) {
+        const counterObserver = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              const target = parseInt(el.getAttribute('data-target') || el.textContent.replace(/\D/g, ''), 10) || 0;
+              const duration = 1400; // ms
+              let start = null;
+              function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                el.innerText = Math.floor(progress * target);
+                if (progress < 1) {
+                  requestAnimationFrame(step);
+                } else {
+                  el.innerText = target + '+';
+                }
+              }
+              requestAnimationFrame(step);
+              obs.unobserve(el);
+            }
+          });
+        }, { threshold: 0.4 });
+        counters.forEach(c => counterObserver.observe(c));
+      }
+
+      /* ---------- 3) Hero caption replay on carousel slide ---------- */
+      const heroCarousel = document.getElementById('heroCarousel');
+      function playCaptionAnimations(item) {
+        if (!item) return;
+        // add .play to each caption element and remove after animation ends (so it can replay later)
+        item.querySelectorAll('.fadeInDown, .fadeInUp').forEach((el) => {
+          el.classList.remove('play');          // reset
+          void el.offsetWidth;                  // reflow to allow re-add
+          el.classList.add('play');             // triggers animation
+          // remove .play after animation to prepare for next slide (duration + small buffer)
+          const duration = parseFloat(getComputedStyle(el).animationDuration) || 1;
+          setTimeout(() => el.classList.remove('play'), (duration * 1000) + 50);
+        });
+      }
+
+      // play animations for first active item immediately
+      const initialActive = document.querySelector('#heroCarousel .carousel-item.active');
+      if (initialActive) playCaptionAnimations(initialActive);
+
+      // Listen for Bootstrap carousel events (requires bootstrap.js loaded)
+      if (heroCarousel) {
+        heroCarousel.addEventListener('slid.bs.carousel', function (e) {
+          const active = heroCarousel.querySelector('.carousel-item.active');
+          playCaptionAnimations(active);
+        });
+      }
+
+      /* ---------- 4) Optional: ensure AOS refresh on dynamic changes ---------- */
+      if (window.AOS) {
+        setTimeout(() => AOS.refresh(), 600);
+      }
+    });
+  </script>
+
   <style>
     :root {
       --primary-blue: #02245B;
       --accent-blue: #0d6efd;
       --light-blue: #eaf3ff;
     }
-    
+
     body {
       font-family: 'Segoe UI', sans-serif;
       color: #333;
     }
-    
+
     .navbar {
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      border-top: 6px solid rgb(124, 132, 251);
     }
-    
+
     .navbar-brand img {
-      height: 48px;
+      height: 68px;
       width: auto;
     }
-    
+
     .navbar-nav .nav-link {
       color: #333;
       font-weight: 500;
@@ -41,17 +121,17 @@
       transition: all 0.3s ease;
       position: relative;
     }
-    
+
     .navbar-nav .nav-link:hover {
       color: var(--accent-blue);
       background-color: rgba(13, 110, 253, 0.05);
     }
-    
+
     .navbar-nav .nav-link.active {
       color: var(--accent-blue);
       font-weight: 600;
     }
-    
+
     .navbar-nav .nav-link.active::after {
       content: '';
       position: absolute;
@@ -61,26 +141,26 @@
       height: 2px;
       background-color: var(--accent-blue);
     }
-    
+
     .page-hero {
       background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
       color: white;
       padding: 100px 0 60px;
       text-align: center;
     }
-    
+
     .page-hero h1 {
       font-size: 3.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
     }
-    
+
     .page-hero p {
       font-size: 1.2rem;
       max-width: 700px;
       margin: 0 auto;
     }
-    
+
     .section-title {
       font-weight: bold;
       color: var(--primary-blue);
@@ -88,7 +168,7 @@
       position: relative;
       display: inline-block;
     }
-    
+
     .section-title::after {
       content: "";
       display: block;
@@ -98,105 +178,405 @@
       margin: 12px auto 0;
       border-radius: 2px;
     }
-    
-    .products-section {
+
+    .contact-section {
       padding: 80px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
     }
-    
-    .category-header {
-      background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
-      color: white;
-      padding: 15px 30px;
-      border-radius: 50px;
-      margin: 0 auto 40px;
-      font-weight: 600;
-      font-size: 1.3rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: inline-block;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .category-header:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-    
-    .product-card {
+
+    .contact-card {
       background: #ffffff;
       border-radius: 20px;
-      padding: 30px;
-      margin-bottom: 30px;
+      padding: 40px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
       transition: transform 0.4s ease, box-shadow 0.4s ease;
-      position: relative;
-      overflow: hidden;
-      text-align: center;
       height: 100%;
     }
-    
-    .product-card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: rgba(0, 123, 255, 0.05);
-      transform: rotate(45deg);
-      transition: all 0.5s ease;
-      opacity: 0;
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     }
-    
-    .product-card:hover::before {
-      opacity: 1;
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px 15px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
     }
-    
-    .product-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    .form-control:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
     }
-    
-    .product-icon {
-      font-size: 3.5rem;
-      color: var(--accent-blue);
-      margin-bottom: 20px;
-      transition: transform 0.3s ease;
-    }
-    
-    .product-card:hover .product-icon {
-      transform: scale(1.1);
-    }
-    
-    .product-title {
-      font-weight: 700;
+
+    .form-label {
+      font-weight: 600;
       color: var(--primary-blue);
-      margin-bottom: 15px;
-      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .btn-contact {
+      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-contact:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+      color: white;
+    }
+
+    .contact-info {
+      padding: 20px 0;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(13, 110, 253, 0.05);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .contact-item:hover {
+      background: rgba(13, 110, 253, 0.1);
+      transform: translateX(5px);
+    }
+
+    .contact-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .contact-details h4 {
+      color: var(--primary-blue);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .contact-details p {
+      color: #555;
+      margin: 0;
+    }
+
+    .contact-details a {
+      color: #555;
+      text-decoration: none;
       transition: color 0.3s ease;
     }
-    
-    .product-desc {
-      font-size: 0.95rem;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 20px;
+
+    .contact-details a:hover {
+      color: var(--accent-blue);
     }
-    
+
+    .map-container {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      height: 400px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .social-link {
+      width: 45px;
+      height: 45px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px);
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .business-hours {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      margin-top: 30px;
+    }
+
+    .hours-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .hours-item:last-child {
+      border-bottom: none;
+    }
+
+    .alert {
+      border-radius: 10px;
+      border: none;
+      padding: 15px 20px;
+    }
+
+    .alert-success {
+      background: #d1edff;
+      color: var(--primary-blue);
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .alert-danger {
+      background: #ffe6e6;
+      color: #dc3545;
+      border-left: 4px solid #dc3545;
+    }
+
+    footer {
+      background: var(--primary-blue);
+      color: white;
+      padding: 40px 0 20px;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent-blue);
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .contact-card {
+        padding: 30px 20px;
+      }
+
+      .contact-item {
+        padding: 15px;
+      }
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles for the carousel */
+    #heroCarousel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-item {
+      position: relative;
+    }
+
+    .hero-img {
+      height: 70vh;
+      object-fit: cover;
+    }
+
+    .carousel-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* background: rgba(0, 0, 0, 0.4); */
+    }
+
+    .carousel-caption {
+      bottom: 30%;
+      left: 10%;
+      right: auto;
+      text-align: left;
+      max-width: 600px;
+    }
+
+    .button-group .btn {
+      margin: 0 10px;
+    }
+
+    .glow-btn:hover {
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    }
+
+    /* Checkerboard overlay for transition */
+    .checkerboard-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      pointer-events: none;
+      display: none;
+    }
+
+    .checkerboard-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      width: 100%;
+      height: 100%;
+    }
+
+    .checkerboard-cell {
+      background-color: rgba(0, 0, 0, 0.8);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Animation for the captions */
+    .animate-caption h1 {
+      animation: fadeInDown 1s ease;
+    }
+
+    .animate-caption p {
+      animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    .animate-caption .button-group {
+      animation: fadeInUp 1s ease 0.6s both;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  <style>
+    :root {
+      --primary-blue: #02245B;
+      --accent-blue: #0d6efd;
+      --light-blue: #eaf3ff;
+      --dark-gray: #333;
+      --medium-gray: #666;
+      --light-gray: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--dark-gray);
+      line-height: 1.6;
+      background-color: #f9f9f9;
+    }
+
+    .category-header {
+      background-color: var(--light-blue);
+      color: var(--primary-blue);
+      padding: 12px 25px;
+      border-radius: 5px;
+      margin: 40px 0 30px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      border-left: 5px solid var(--accent-blue);
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+      border-top: 3px solid var(--accent-blue);
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 5px;
+      background-color: var(--light-gray);
+    }
+
+    .product-image img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .product-title {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .product-desc {
+      color: var(--medium-gray);
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+    }
+
     .product-features {
       list-style: none;
       padding: 0;
       margin-bottom: 20px;
-      text-align: left;
     }
-    
+
     .product-features li {
       padding: 5px 0;
       position: relative;
       padding-left: 25px;
     }
-    
+
     .product-features li:before {
       content: "✓";
       position: absolute;
@@ -204,90 +584,35 @@
       color: var(--accent-blue);
       font-weight: bold;
     }
-    
+
     .btn-product {
-      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
+      background-color: var(--accent-blue);
       color: white;
       border: none;
-      padding: 10px 25px;
-      border-radius: 50px;
-      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: 500;
       transition: all 0.3s ease;
     }
-    
+
     .btn-product:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+      background-color: var(--primary-blue);
       color: white;
     }
-    
-    .features-section {
-      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
-      padding: 80px 0;
-    }
-    
-    .feature-box {
-      text-align: center;
-      padding: 30px;
-    }
-    
-    .feature-icon {
-      font-size: 2.5rem;
-      color: var(--accent-blue);
-      margin-bottom: 20px;
-    }
-    
-    .feature-title {
-      font-weight: 600;
-      color: var(--primary-blue);
-      margin-bottom: 15px;
-    }
-    
-    .cta-section {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
-      color: white;
-      padding: 80px 0;
-      text-align: center;
-    }
-    
-    .cta-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-    
-    footer {
-      background: var(--primary-blue);
-      color: white;
-      padding: 40px 0 20px;
-    }
-    
-    footer a {
-      color: #fff;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    
-    footer a:hover {
-      color: var(--accent-blue);
-    }
-    
+
     @media (max-width: 768px) {
-      .page-hero h1 {
-        font-size: 2.5rem;
-      }
-      
       .category-header {
         font-size: 1.1rem;
-        padding: 12px 25px;
+        padding: 10px 20px;
       }
-      
+
       .product-card {
         padding: 20px;
       }
     }
   </style>
 </head>
+
 <body>
   <!-- Modern Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
@@ -317,13 +642,330 @@
           <li class="nav-item">
             <a class="nav-link" href="services.html">SERVICES</a>
           </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="ESSEM-TOOLS-PRODUCTS.pdf">DOWNLOADS</a>
+          </li> -->
           <li class="nav-item">
             <a class="nav-link" href="contact.html">CONTACT US</a>
           </li>
+          <!-- Call Button -->
+          <a href="tel:+919176781907" class="call-button" style="background: linear-gradient(135deg, #00c6ff, #0072ff);
+     color: #fff;
+     padding: 12px 20px;
+     border-radius: 50px;
+     text-decoration: none;
+     font-weight: bold;
+     font-size: 16px;
+     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+     z-index: 9999;
+     transition: transform 0.2s, box-shadow 0.2s;
+     bottom: 20px;
+     right: 20px;
+     margin-left: 200px;
+     ">
+            <i class="bi bi-telephone-fill"></i> +91 91767 81907
+          </a>
         </ul>
+
       </div>
     </div>
   </nav>
+  <style>
+    :root {
+      --primary-blue: #02245B;
+      --accent-blue: #0d6efd;
+      --light-blue: #eaf3ff;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+    }
+
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      border-top: 6px solid rgb(124, 132, 251);
+    }
+
+    .navbar-brand img {
+      height: 68px;
+      width: auto;
+    }
+
+    .navbar-nav .nav-link {
+      color: #333;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      margin: 0 0.25rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: var(--accent-blue);
+      background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .navbar-nav .nav-link.active {
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .navbar-nav .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 1rem;
+      right: 1rem;
+      height: 2px;
+      background-color: var(--accent-blue);
+    }
+
+    .page-hero {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white;
+      padding: 100px 0 60px;
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .page-hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: var(--primary-blue);
+      margin-bottom: 30px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: var(--accent-blue);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    .contact-section {
+      padding: 80px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
+    }
+
+    .contact-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      height: 100%;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px 15px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 8px;
+    }
+
+    .btn-contact {
+      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-contact:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+      color: white;
+    }
+
+    .contact-info {
+      padding: 20px 0;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(13, 110, 253, 0.05);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .contact-item:hover {
+      background: rgba(13, 110, 253, 0.1);
+      transform: translateX(5px);
+    }
+
+    .contact-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .contact-details h4 {
+      color: var(--primary-blue);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .contact-details p {
+      color: #555;
+      margin: 0;
+    }
+
+    .contact-details a {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .contact-details a:hover {
+      color: var(--accent-blue);
+    }
+
+    .map-container {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      height: 400px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .social-link {
+      width: 45px;
+      height: 45px;
+      background: var(--accent-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px);
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .business-hours {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      margin-top: 30px;
+    }
+
+    .hours-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .hours-item:last-child {
+      border-bottom: none;
+    }
+
+    .alert {
+      border-radius: 10px;
+      border: none;
+      padding: 15px 20px;
+    }
+
+    .alert-success {
+      background: #d1edff;
+      color: var(--primary-blue);
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .alert-danger {
+      background: #ffe6e6;
+      color: #dc3545;
+      border-left: 4px solid #dc3545;
+    }
+
+    footer {
+      background: var(--primary-blue);
+      color: white;
+      padding: 40px 0 20px;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent-blue);
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .contact-card {
+        padding: 30px 20px;
+      }
+
+      .contact-item {
+        padding: 15px;
+      }
+    }
+  </style>
 
   <!-- Page Hero -->
   <section class="page-hero">
@@ -333,424 +975,915 @@
     </div>
   </section>
 
-  <!-- Cutting Tools Section -->
-  <section class="products-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="category-header">CUTTING TOOLS</h2>
+  <!-- Products Section -->
+  <div class="container my-5">
+    <!-- CUTTING TOOLS -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="category-header">CUTTING TOOLS</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Threading+Taps" alt="Threading Taps">
+          </div>
+          <h4 class="product-title">Threading Taps</h4>
+          <p class="product-desc">Precision threading taps for multiple applications with superior performance and
+            durability.</p>
+          <ul class="product-features">
+            <li>High-speed steel construction</li>
+            <li>Various thread standards</li>
+            <li>Extended tool life</li>
+            <li>Precision ground threads</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="product-card">
-            <i class="fas fa-screwdriver product-icon"></i>
-            <h3 class="product-title">Threading Taps</h3>
-            <p class="product-desc">Precision threading taps for multiple applications with superior performance and durability.</p>
-            <ul class="product-features">
-              <li>High-speed steel construction</li>
-              <li>Various thread standards</li>
-              <li>Extended tool life</li>
-              <li>Precision ground threads</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=End+Mills" alt="End Mills">
           </div>
+          <h4 class="product-title">End Mills</h4>
+          <p class="product-desc">High-performance end mills for steel, graphite, and aluminum applications.</p>
+          <ul class="product-features">
+            <li>Multiple flute configurations</li>
+            <li>Premium carbide substrate</li>
+            <li>Optimized geometries</li>
+            <li>Enhanced surface finishes</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="product-card">
-            <i class="fas fa-toolbox product-icon"></i>
-            <h3 class="product-title">End Mills</h3>
-            <p class="product-desc">High-performance end mills for steel, graphite, and aluminum applications.</p>
-            <ul class="product-features">
-              <li>Multiple flute configurations</li>
-              <li>Premium carbide substrate</li>
-              <li>Optimized geometries</li>
-              <li>Enhanced surface finishes</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Drills+%26+Reamers" alt="Drills & Reamers">
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="product-card">
-            <i class="fas fa-digging product-icon"></i>
-            <h3 class="product-title">Drills & Reamers</h3>
-            <p class="product-desc">High-quality drills and reamers for precision hole-making operations.</p>
-            <ul class="product-features">
-              <li>Precision point geometry</li>
-              <li>Optimized chip evacuation</li>
-              <li>Superior hole quality</li>
-              <li>Extended tool life</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
-          </div>
+          <h4 class="product-title">Drills & Reamers</h4>
+          <p class="product-desc">High-quality drills and reamers for precision hole-making operations.</p>
+          <ul class="product-features">
+            <li>Precision point geometry</li>
+            <li>Optimized chip evacuation</li>
+            <li>Superior hole quality</li>
+            <li>Extended tool life</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Tool Holdings Section -->
-  <section class="products-section" style="background: #f8f9fa;">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="category-header">TOOL HOLDINGS</h2>
+    <!-- TOOL HOLDINGS -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="category-header">TOOL HOLDINGS</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Shrink-Fit+Tooling"
+              alt="Shrink-Fit Tooling">
+          </div>
+          <h4 class="product-title">Shrink-Fit Tooling</h4>
+          <p class="product-desc">2-piece modular shrink-fit holders for deep machining and 5-axis operations.</p>
+          <ul class="product-features">
+            <li>Maximum gripping force</li>
+            <li>Excellent concentricity</li>
+            <li>High-speed capability</li>
+            <li>Reduced vibration</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="product-card">
-            <i class="fas fa-compress-arrows-alt product-icon"></i>
-            <h3 class="product-title">Shrink-Fit Tooling</h3>
-            <p class="product-desc">2-piece modular shrink-fit holders for deep machining and 5-axis operations.</p>
-            <ul class="product-features">
-              <li>Maximum gripping force</li>
-              <li>Excellent concentricity</li>
-              <li>High-speed capability</li>
-              <li>Reduced vibration</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Modular+Holders" alt="Modular Holders">
           </div>
+          <h4 class="product-title">Modular Holders</h4>
+          <p class="product-desc">Versatile tool holding solutions for various machining applications.</p>
+          <ul class="product-features">
+            <li>Quick change capability</li>
+            <li>High precision</li>
+            <li>Rigid connection</li>
+            <li>Wide range of sizes</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="product-card">
-            <i class="fas fa-cogs product-icon"></i>
-            <h3 class="product-title">Modular Holders</h3>
-            <p class="product-desc">Versatile tool holding solutions for various machining applications.</p>
-            <ul class="product-features">
-              <li>Quick change capability</li>
-              <li>High precision</li>
-              <li>Rigid connection</li>
-              <li>Wide range of sizes</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Angle+Heads" alt="Angle Heads">
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="product-card">
-            <i class="fas fa-angle-double-right product-icon"></i>
-            <h3 class="product-title">Angle Heads</h3>
-            <p class="product-desc">Low-cost solution with flexible cutting angles up to 360° for complex machining.</p>
-            <ul class="product-features">
-              <li>360° adjustable head</li>
-              <li>Compact design</li>
-              <li>High rigidity</li>
-              <li>Easy installation</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
-          </div>
+          <h4 class="product-title">Angle Heads</h4>
+          <p class="product-desc">Low-cost solution with flexible cutting angles up to 360° for complex machining.</p>
+          <ul class="product-features">
+            <li>360° adjustable head</li>
+            <li>Compact design</li>
+            <li>High rigidity</li>
+            <li>Easy installation</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Workholdings Section -->
-  <section class="products-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="category-header">WORKHOLDINGS</h2>
+    <!-- WORK HOLDINGS -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="category-header">WORK HOLDINGS</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Vises+%26+Clamps" alt="Vises & Clamps">
+          </div>
+          <h4 class="product-title">Vises & Clamps</h4>
+          <p class="product-desc">Precision workholding vises and clamps for secure part positioning.</p>
+          <ul class="product-features">
+            <li>High clamping force</li>
+            <li>Precise alignment</li>
+            <li>Durable construction</li>
+            <li>Quick setup</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="product-card">
-            <i class="fas fa-grip-horizontal product-icon"></i>
-            <h3 class="product-title">Vises & Clamps</h3>
-            <p class="product-desc">Precision workholding vises and clamps for secure part positioning.</p>
-            <ul class="product-features">
-              <li>High clamping force</li>
-              <li>Precise alignment</li>
-              <li>Durable construction</li>
-              <li>Quick setup</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Modular+Fixtures" alt="Modular Fixtures">
           </div>
+          <h4 class="product-title">Modular Fixtures</h4>
+          <p class="product-desc">Customizable fixture systems for complex workholding requirements.</p>
+          <ul class="product-features">
+            <li>Modular design</li>
+            <li>Quick reconfiguration</li>
+            <li>High repeatability</li>
+            <li>Reduced setup time</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="product-card">
-            <i class="fas fa-th-large product-icon"></i>
-            <h3 class="product-title">Modular Fixtures</h3>
-            <p class="product-desc">Customizable fixture systems for complex workholding requirements.</p>
-            <ul class="product-features">
-              <li>Modular design</li>
-              <li>Quick reconfiguration</li>
-              <li>High repeatability</li>
-              <li>Reduced setup time</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Magnetic+Chucks" alt="Magnetic Chucks">
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="product-card">
-            <i class="fas fa-magnet product-icon"></i>
-            <h3 class="product-title">Magnetic Chucks</h3>
-            <p class="product-desc">Powerful magnetic workholding solutions for ferrous materials.</p>
-            <ul class="product-features">
-              <li>Strong holding power</li>
-              <li>Uniform magnetic field</li>
-              <li>Easy operation</li>
-              <li>Minimal part distortion</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
-          </div>
+          <h4 class="product-title">Magnetic Chucks</h4>
+          <p class="product-desc">Powerful magnetic workholding solutions for ferrous materials.</p>
+          <ul class="product-features">
+            <li>Strong holding power</li>
+            <li>Uniform magnetic field</li>
+            <li>Easy operation</li>
+            <li>Minimal part distortion</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Industrial Lubricant Section -->
-  <section class="products-section" style="background: #f8f9fa;">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="category-header">INDUSTRIAL LUBRICANT</h2>
+    <!-- INDUSTRIAL LUBRICANT -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="category-header">INDUSTRIAL LUBRICANT</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Cutting+Fluids" alt="Cutting Fluids">
+          </div>
+          <h4 class="product-title">Cutting Fluids</h4>
+          <p class="product-desc">High-performance cutting fluids for improved tool life and surface finish.</p>
+          <ul class="product-features">
+            <li>Extended tool life</li>
+            <li>Superior cooling</li>
+            <li>Rust protection</li>
+            <li>Environmentally friendly</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="product-card">
-            <i class="fas fa-oil-can product-icon"></i>
-            <h3 class="product-title">Cutting Fluids</h3>
-            <p class="product-desc">High-performance cutting fluids for improved tool life and surface finish.</p>
-            <ul class="product-features">
-              <li>Extended tool life</li>
-              <li>Superior cooling</li>
-              <li>Rust protection</li>
-              <li>Environmentally friendly</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Coolants" alt="Coolants">
           </div>
+          <h4 class="product-title">Coolants</h4>
+          <p class="product-desc">Advanced coolant formulations for various machining operations.</p>
+          <ul class="product-features">
+            <li>Optimal heat transfer</li>
+            <li>Anti-foaming properties</li>
+            <li>Long sump life</li>
+            <li>Biostable formulation</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="product-card">
-            <i class="fas fa-tint product-icon"></i>
-            <h3 class="product-title">Coolants</h3>
-            <p class="product-desc">Advanced coolant formulations for various machining operations.</p>
-            <ul class="product-features">
-              <li>Optimal heat transfer</li>
-              <li>Anti-foaming properties</li>
-              <li>Long sump life</li>
-              <li>Biostable formulation</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Lubricating+Oils" alt="Lubricating Oils">
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="product-card">
-            <i class="fas fa-fan product-icon"></i>
-            <h3 class="product-title">Lubricating Oils</h3>
-            <p class="product-desc">Specialized lubricants for machine tools and equipment maintenance.</p>
-            <ul class="product-features">
-              <li>Reduced friction</li>
-              <li>Wear protection</li>
-              <li>Thermal stability</li>
-              <li>Extended equipment life</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
-          </div>
+          <h4 class="product-title">Lubricating Oils</h4>
+          <p class="product-desc">Specialized lubricants for machine tools and equipment maintenance.</p>
+          <ul class="product-features">
+            <li>Reduced friction</li>
+            <li>Wear protection</li>
+            <li>Thermal stability</li>
+            <li>Extended equipment life</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Coolant Filtration System Section -->
-  <section class="products-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="category-header">COOLANT FILTRATION SYSTEM</h2>
+    <!-- COOLANT FILTRATION SYSTEM -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="category-header">COOLANT FILTRATION SYSTEM</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Central+Filtration"
+              alt="Central Filtration Systems">
+          </div>
+          <h4 class="product-title">Central Filtration Systems</h4>
+          <p class="product-desc">High-capacity coolant filtration for multiple machine tools.</p>
+          <ul class="product-features">
+            <li>High flow rates</li>
+            <li>Fine filtration</li>
+            <li>Automatic cleaning</li>
+            <li>Reduced coolant consumption</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="product-card">
-            <i class="fas fa-filter product-icon"></i>
-            <h3 class="product-title">Central Filtration Systems</h3>
-            <p class="product-desc">High-capacity coolant filtration for multiple machine tools.</p>
-            <ul class="product-features">
-              <li>High flow rates</li>
-              <li>Fine filtration</li>
-              <li>Automatic cleaning</li>
-              <li>Reduced coolant consumption</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Coolant+Recycling" alt="Coolant Recycling">
           </div>
+          <h4 class="product-title">Coolant Recycling</h4>
+          <p class="product-desc">Systems for recycling and reconditioning used coolants.</p>
+          <ul class="product-features">
+            <li>Extended coolant life</li>
+            <li>Reduced waste</li>
+            <li>Cost savings</li>
+            <li>Environmental benefits</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="product-card">
-            <i class="fas fa-recycle product-icon"></i>
-            <h3 class="product-title">Coolant Recycling</h3>
-            <p class="product-desc">Systems for recycling and reconditioning used coolants.</p>
-            <ul class="product-features">
-              <li>Extended coolant life</li>
-              <li>Reduced waste</li>
-              <li>Cost savings</li>
-              <li>Environmental benefits</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Monitoring+Systems"
+              alt="Monitoring Systems">
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="product-card">
-            <i class="fas fa-tachometer-alt product-icon"></i>
-            <h3 class="product-title">Monitoring Systems</h3>
-            <p class="product-desc">Advanced monitoring for coolant quality and system performance.</p>
-            <ul class="product-features">
-              <li>Real-time monitoring</li>
-              <li>Automated alerts</li>
-              <li>Data logging</li>
-              <li>Predictive maintenance</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
-          </div>
+          <h4 class="product-title">Monitoring Systems</h4>
+          <p class="product-desc">Advanced monitoring for coolant quality and system performance.</p>
+          <ul class="product-features">
+            <li>Real-time monitoring</li>
+            <li>Automated alerts</li>
+            <li>Data logging</li>
+            <li>Predictive maintenance</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Measuring Instruments Section -->
-  <section class="products-section" style="background: #f8f9fa;">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="category-header">MEASURING INSTRUMENTS</h2>
+    <!-- MEASURING INSTRUMENTS -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="category-header">MEASURING INSTRUMENTS</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Thread+Gauges" alt="Thread Gauges">
+          </div>
+          <h4 class="product-title">Thread Gauges</h4>
+          <p class="product-desc">Precision thread plug and ring gauges for accurate measurement.</p>
+          <ul class="product-features">
+            <li>High accuracy</li>
+            <li>Various thread standards</li>
+            <li>Durable construction</li>
+            <li>Calibration certification</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="product-card">
-            <i class="fas fa-ruler-combined product-icon"></i>
-            <h3 class="product-title">Thread Gauges</h3>
-            <p class="product-desc">Precision thread plug and ring gauges for accurate measurement.</p>
-            <ul class="product-features">
-              <li>High accuracy</li>
-              <li>Various thread standards</li>
-              <li>Durable construction</li>
-              <li>Calibration certification</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Plain+Gauges" alt="Plain Gauges">
           </div>
+          <h4 class="product-title">Plain Gauges</h4>
+          <p class="product-desc">Plain plug and ring gauges for dimensional verification.</p>
+          <ul class="product-features">
+            <li>Precision ground</li>
+            <li>Wear-resistant</li>
+            <li>Various tolerance grades</li>
+            <li>Long service life</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="product-card">
-            <i class="fas fa-ruler product-icon"></i>
-            <h3 class="product-title">Plain Gauges</h3>
-            <p class="product-desc">Plain plug and ring gauges for dimensional verification.</p>
-            <ul class="product-features">
-              <li>Precision ground</li>
-              <li>Wear-resistant</li>
-              <li>Various tolerance grades</li>
-              <li>Long service life</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://via.placeholder.com/300x200/02245B/FFFFFF?text=Snap+%26+Air+Gauges"
+              alt="Snap & Air Gauges">
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="product-card">
-            <i class="fas fa-compress product-icon"></i>
-            <h3 class="product-title">Snap & Air Gauges</h3>
-            <p class="product-desc">Advanced gauging solutions for high-volume inspection.</p>
-            <ul class="product-features">
-              <li>Fast measurement</li>
-              <li>High repeatability</li>
-              <li>Non-contact options</li>
-              <li>Automated capabilities</li>
-            </ul>
-            <button class="btn btn-product">Learn More</button>
-          </div>
+          <h4 class="product-title">Snap & Air Gauges</h4>
+          <p class="product-desc">Advanced gauging solutions for high-volume inspection.</p>
+          <ul class="product-features">
+            <li>Fast measurement</li>
+            <li>High repeatability</li>
+            <li>Non-contact options</li>
+            <li>Automated capabilities</li>
+          </ul>
+          <button class="btn btn-product">View Details</button>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="section-title">Why Choose Our Products</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="feature-box">
-            <i class="fas fa-award feature-icon"></i>
-            <h4 class="feature-title">Premium Quality</h4>
-            <p>All our products are manufactured to the highest standards with rigorous quality control.</p>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="feature-box">
-            <i class="fas fa-cogs feature-icon"></i>
-            <h4 class="feature-title">Precision Engineering</h4>
-            <p>Designed and engineered for optimal performance in demanding applications.</p>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="feature-box">
-            <i class="fas fa-headset feature-icon"></i>
-            <h4 class="feature-title">Expert Support</h4>
-            <p>Our technical team provides comprehensive support and application guidance.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  </div>
   <!-- CTA Section -->
   <section class="cta-section">
     <div class="container">
       <div class="row">
         <div class="col-12" data-aos="fade-up">
-          <h2 class="cta-title">Ready to Enhance Your Operations?</h2>
-          <p class="mb-4">Contact our experts to find the perfect solutions for your machining needs</p>
-          <a href="contact.html" class="btn btn-light btn-lg">Get in Touch</a>
+          <h2 class="cta-title">Ready to Optimize Your Manufacturing?</h2>
+          <p class="mb-4">Let our experts help you improve efficiency, reduce costs, and enhance quality</p>
+          <a href="contact.html" class="btn btn-light btn-lg me-3">Get Free Consultation</a>
+          <a href="tel:+919176781907" class="btn btn-outline-light btn-lg">Call Now</a>
         </div>
       </div>
     </div>
   </section>
+  <style>
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <h5>ESSEM Threading Tools</h5>
-          <p>Precision tools and machining solutions for global industries.</p>
-        </div>
-        <div class="col-md-4 mb-4">
-          <h5>Contact Info</h5>
-          <p><i class="fas fa-map-marker-alt me-2"></i> No-14, 4th Street, Periyar Nagar, Irumbuliyur, Tambaram West, Chennai-600 045</p>
-          <p><i class="fas fa-phone me-2"></i> +91 91767 81907 / +91 97879 38377</p>
-          <p><i class="fas fa-envelope me-2"></i> <a href="mailto:essemtools@gmail.com">essemtools@gmail.com</a></p>
-        </div>
-        <div class="col-md-4 mb-4">
-          <h5>Quick Links</h5>
-          <p><a href="index.html">Home</a></p>
-          <p><a href="about.html">About Us</a></p>
-          <p><a href="products.html">Products</a></p>
-          <p><a href="contact.html">Contact</a></p>
-        </div>
+    .cta-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+  </style>
+  <!-- Floating Social Media Widget -->
+  <div class="social-float">
+    <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-icon linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="#" class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+  </div>
+
+  <!-- CSS -->
+  <style>
+    .social-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .social-icon {
+      text-decoration: none;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #007bff, #00c6ff);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-10px) scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Brand Colors */
+    .facebook {
+      background: linear-gradient(45deg, #4267B2, #1E3C72);
+    }
+
+    .linkedin {
+      background: linear-gradient(45deg, #0077B5, #00A0DC);
+    }
+
+    .whatsapp {
+      background: linear-gradient(45deg, #25D366, #128C7E);
+    }
+
+    .instagram {
+      background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+    }
+
+    /* Responsive tweak */
+    @media (max-width: 576px) {
+      .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .social-float {
+        gap: 10px;
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+  </style>
+  <!-- ChatBot Container -->
+  <div class="chatbot-container">
+    <button class="chatbot-btn" id="chatbotToggle">
+      <i class="fas fa-comments"></i>
+    </button>
+
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <div class="chatbot-title">ESSEM Assistant</div>
+        <button class="chatbot-close" id="chatbotClose">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="row pt-3">
-        <div class="col-12 text-center">
-          <p>&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
-        </div>
+
+      <div class="chatbot-messages" id="chatbotMessages">
+        <!-- Messages will be added here dynamically -->
+      </div>
+
+      <div class="typing-indicator" id="typingIndicator">
+        ESSEM Assistant is typing...
+      </div>
+
+      <div class="quick-actions" id="quickActions">
+        <button class="quick-action-btn" data-question="products">Our Products</button>
+        <button class="quick-action-btn" data-question="pricing">Pricing</button>
+        <button class="quick-action-btn" data-question="shipping">Shipping Info</button>
+        <button class="quick-action-btn" data-question="support">Contact Support</button>
+      </div>
+
+      <div class="call-btn-container" style="padding: 10px 15px;">
+        <a href="tel:+919176781907" style="text-decoration: none;">
+          <button class="call-btn" id="callBtn">
+            <i class="fas fa-phone"></i> Call Us Now: +91 91767 81907
+          </button>
+        </a>
+      </div>
+
+      <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Ask about our products...">
+        <button id="sendMessage">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="chatbot-footer">
+        <!-- Minimal, inline-style (great for footers or small badges) -->
+        <a href="https://zolangnexora.com" title="Zolang Nexora — Software Development & IT Solutions"
+          style="font-family:Inter, Arial, sans-serif;font-size:13px;color:#6b7280;text-decoration:none;float: right;">
+          Powered by <strong style="color:#0b74de">Zolang Nexora Softwares</strong>
+        </a>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- AOS JS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Initialize AOS
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: 'ease-out-cubic'
+    document.addEventListener('DOMContentLoaded', function () {
+      // DOM Elements
+      const chatbotToggle = document.getElementById('chatbotToggle');
+      const chatbotWindow = document.getElementById('chatbotWindow');
+      const chatbotClose = document.getElementById('chatbotClose');
+      const chatbotMessages = document.getElementById('chatbotMessages');
+      const chatbotInput = document.getElementById('chatbotInput');
+      const sendMessage = document.getElementById('sendMessage');
+      const typingIndicator = document.getElementById('typingIndicator');
+      const quickActions = document.getElementById('quickActions');
+      const callBtn = document.getElementById('callBtn');
+
+      // Chat state
+      let isWaitingForResponse = false;
+
+      // Auto welcome message
+      setTimeout(() => {
+        if (!sessionStorage.getItem('chatbotWelcomed')) {
+          addBotMessage("Hello! I'm your ESSEM Assistant, powered by DeepSeek AI. I can help you with product information, pricing, shipping, and more. How can I assist you today?");
+          sessionStorage.setItem('chatbotWelcomed', 'true');
+        }
+      }, 1000);
+
+      // Toggle chatbot window
+      chatbotToggle.addEventListener('click', function () {
+        chatbotWindow.style.display = 'flex';
+        chatbotInput.focus();
+      });
+
+      chatbotClose.addEventListener('click', function () {
+        chatbotWindow.style.display = 'none';
+      });
+
+      // Send message function
+      function sendUserMessage() {
+        const message = chatbotInput.value.trim();
+        if (message && !isWaitingForResponse) {
+          addUserMessage(message);
+          chatbotInput.value = '';
+          isWaitingForResponse = true;
+
+          // Show typing indicator
+          typingIndicator.style.display = 'block';
+          scrollToBottom();
+
+          // Simulate bot response after delay
+          setTimeout(() => {
+            typingIndicator.style.display = 'none';
+            processUserMessage(message);
+            isWaitingForResponse = false;
+          }, 1500);
+        }
+      }
+
+      // Send message on button click
+      sendMessage.addEventListener('click', sendUserMessage);
+
+      // Send message on Enter key
+      chatbotInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          sendUserMessage();
+        }
+      });
+
+      // Quick action buttons
+      document.querySelectorAll('.quick-action-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          const question = this.getAttribute('data-question');
+          let message = '';
+
+          switch (question) {
+            case 'products':
+              message = "What products do you offer?";
+              break;
+            case 'pricing':
+              message = "Can you provide pricing information?";
+              break;
+            case 'shipping':
+              message = "What are your shipping options?";
+              break;
+            case 'support':
+              message = "How can I contact support?";
+              break;
+          }
+
+          chatbotInput.value = message;
+          sendUserMessage();
+        });
+      });
+
+      // Call button
+      callBtn.addEventListener('click', function () {
+        addBotMessage("Connecting you to our support team at +91 91767 81907. You can also save this number for future reference.");
+        // In a real implementation, this would initiate a phone call
+        // window.location.href = 'tel:+919176781907';
+
+        // Show a confirmation message
+        setTimeout(() => {
+          addBotMessage("If you prefer, you can also email us at essemtools@gmail.com for non-urgent inquiries.");
+        }, 2000);
+      });
+
+      // Add user message to chat
+      function addUserMessage(text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user-message';
+        messageDiv.textContent = text;
+        chatbotMessages.appendChild(messageDiv);
+        scrollToBottom();
+      }
+
+      // Add bot message to chat
+      function addBotMessage(text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+        messageDiv.textContent = text;
+        chatbotMessages.appendChild(messageDiv);
+        scrollToBottom();
+      }
+
+      // Scroll to bottom of messages
+      function scrollToBottom() {
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      }
+
+      // Process user message and generate response
+      function processUserMessage(message) {
+        const lowerMessage = message.toLowerCase();
+
+        // Check for FAQ-related questions
+        if (lowerMessage.includes('product') || lowerMessage.includes('offer') || lowerMessage.includes('tool')) {
+          addBotMessage("We offer a comprehensive range of precision threading tools including:\n\n• Threading Taps & Dies\n• Drills & Reamers\n• End Mills\n• Boring Systems\n• Micro-boring Heads\n• Shrink-fit Tooling\n\nAll our tools are engineered for precision and durability in industrial applications.");
+
+          // Suggest checking FAQ
+          setTimeout(() => {
+            addBotMessage("You can find detailed information about our products in the FAQ section above.");
+          }, 1000);
+        }
+        else if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much')) {
+          addBotMessage("Our pricing varies based on product specifications, materials, and order quantity. For accurate pricing information, I recommend:\n\n1. Contacting our sales team directly\n2. Requesting a quote for specific products\n3. Checking our current promotions\n\nWould you like me to connect you with our sales team?");
+        }
+        else if (lowerMessage.includes('ship') || lowerMessage.includes('deliver') || lowerMessage.includes('shipping')) {
+          addBotMessage("We provide reliable global shipping with the following options:\n\n• Standard Shipping (7-14 business days)\n• Express Shipping (3-5 business days)\n• Priority Shipping (1-2 business days)\n\nAll products are carefully packaged to maintain precision and quality during transit. Shipping costs vary by destination and order size.");
+        }
+        else if (lowerMessage.includes('custom') || lowerMessage.includes('special') || lowerMessage.includes('bespoke')) {
+          addBotMessage("Yes! We specialize in custom-engineered tooling solutions. Our technical team can design tools specifically for your unique machining requirements, materials, and applications.");
+
+          setTimeout(() => {
+            addBotMessage("To discuss custom solutions, please contact our technical team who will guide you through the design and specification process.");
+          }, 1000);
+        }
+        else if (lowerMessage.includes('contact') || lowerMessage.includes('support') || lowerMessage.includes('help') || lowerMessage.includes('call')) {
+          addBotMessage("You can reach our team through multiple channels:\n\n📞 Phone: +91 91767 81907 / +91 97879 38377\n✉️ Email: essemtools@gmail.com\n📍 Address: 142-A,Ramachandra Rao IAS Road, \nNear Toll Plazza, Royappa Nagar,\nChennai, Tamil Nadu 600048.\n\nOur support hours are Monday-Saturday, 9 AM - 5.301 PM IST.");
+        }
+        else if (lowerMessage.includes('industry') || lowerMessage.includes('serve') || lowerMessage.includes('client')) {
+          addBotMessage("We serve a diverse range of industries worldwide:\n\n• Automotive Manufacturing\n• Aerospace Engineering\n• General Manufacturing\n• Precision Engineering\n• Industrial Equipment\n• Defense Sector\n\nOur tools are trusted for their precision and reliability across these sectors.");
+        }
+        else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+          addBotMessage("Hello! I'm your ESSEM Assistant, powered by DeepSeek AI. I'm here to help you with information about our threading tools, pricing, shipping, and technical support. What would you like to know?");
+        }
+        else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+          addBotMessage("You're welcome! I'm glad I could help. Is there anything else you'd like to know about ESSEM Threading Tools?");
+        }
+        else {
+          // Default response for unrecognized queries
+          addBotMessage("I'm here to help with information about ESSEM Threading Tools. You can ask me about:\n\n• Our product range\n• Pricing and quotes\n• Shipping information\n• Custom tooling solutions\n• Technical support\n\nOr use the quick action buttons above for common questions.");
+        }
+      }
     });
   </script>
+  <style>
+    /* Chatbot Styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .chatbot-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .chatbot-btn:hover {
+      background: var(--primary-blue);
+      transform: scale(1.05);
+    }
+
+    .chatbot-window {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      width: 350px;
+      height: 500px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chatbot-header {
+      background: var(--primary-blue);
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .bot-message {
+      background: var(--light-blue);
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .user-message {
+      background: var(--accent-blue);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+
+    .chatbot-input {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 10px 15px;
+      outline: none;
+    }
+
+    .chatbot-input button {
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .quick-action-btn {
+      background: var(--light-blue);
+      border: 1px solid var(--accent-blue);
+      color: var(--primary-blue);
+      border-radius: 15px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-action-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .call-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .call-btn:hover {
+      background: #218838;
+    }
+
+    .typing-indicator {
+      display: none;
+      align-self: flex-start;
+      background: var(--light-blue);
+      padding: 10px 15px;
+      border-radius: 18px;
+      border-bottom-left-radius: 5px;
+      font-style: italic;
+      color: var(--medium-gray);
+    }
+
+    .chatbot-footer {
+      padding: 8px 15px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--medium-gray);
+      border-top: 1px solid #eee;
+      background: #f9f9f9;
+    }
+
+    /* FAQ Section */
+    .accordion-button:not(.collapsed) {
+      background-color: var(--light-blue);
+      color: var(--primary-blue);
+    }
+
+    .accordion-button:focus {
+      box-shadow: none;
+      border-color: rgba(0, 0, 0, .125);
+    }
+
+    .demo-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+
+
+  <!-- Footer -->
+  <footer class="text-center text-white py-4">
+    <div class="container">
+      <p class="mb-2">&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
+      <p class="mb-2">
+        <a href="privacy.html" class="text-white text-decoration-none me-3">Privacy Policy</a> |
+        <a href="terms.html" class="text-white text-decoration-none ms-3">Terms & Conditions</a>
+      </p>
+      <p class="mb-0">
+        Developed and Maintained by <a href="https://www.zolangnexora.com" target="_blank"
+          style="color:#7083ad; text-decoration:none; font-weight:bold;">
+          Zolang Nexora Softwares
+        </a>
+      </p>
+    </div>
+
+  </footer>
+
+  <!-- Optional Footer CSS -->
+  <style>
+    footer a:hover {
+      color: #0d6efd;
+      text-decoration: underline;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

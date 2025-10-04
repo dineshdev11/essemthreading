@@ -1,0 +1,27 @@
+        .page-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .page-title {
+            color: #02245B;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
