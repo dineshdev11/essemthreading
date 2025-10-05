@@ -4,33 +4,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Services - ESSEM Threading Tools</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <!-- AOS CSS -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <title>ESSEM - Industrial Tools & Solutions</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- Bootstrap Icons CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
     :root {
       --primary-blue: #02245B;
       --accent-blue: #0d6efd;
-      --light-blue: #eaf3ff;
+      --hover-blue: #0b5ed7;
+      --gradient-start: #00c6ff;
+      --gradient-end: #0072ff;
+      --transition-speed: 0.3s;
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      color: #333;
+      font-family: 'Segoe UI', system-ui, sans-serif;
     }
 
     .navbar {
+      border-top: 6px solid rgb(124, 132, 251);
+      transition: all var(--transition-speed) ease;
+      padding: 0.5rem 0;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     }
 
+    .navbar.scrolled {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 0.25rem 0;
+    }
+
     .navbar-brand img {
-      height: 48px;
-      width: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-brand:hover img {
+      transform: scale(1.05);
     }
 
     .navbar-nav .nav-link {
@@ -39,13 +52,32 @@
       padding: 0.5rem 1rem;
       margin: 0 0.25rem;
       border-radius: 4px;
-      transition: all 0.3s ease;
+      transition: all var(--transition-speed) ease;
       position: relative;
+      overflow: hidden;
+    }
+
+    .navbar-nav .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent-blue);
+      transition: all var(--transition-speed) ease;
+      transform: translateX(-50%);
+    }
+
+    .navbar-nav .nav-link:hover::before,
+    .navbar-nav .nav-link.active::before {
+      width: calc(100% - 2rem);
     }
 
     .navbar-nav .nav-link:hover {
       color: var(--accent-blue);
       background-color: rgba(13, 110, 253, 0.05);
+      transform: translateY(-2px);
     }
 
     .navbar-nav .nav-link.active {
@@ -53,310 +85,841 @@
       font-weight: 600;
     }
 
-    .navbar-nav .nav-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 1rem;
-      right: 1rem;
-      height: 2px;
-      background-color: var(--accent-blue);
-    }
-
-    .page-hero {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
-      color: white;
-      padding: 100px 0 60px;
-      text-align: center;
-    }
-
-    .page-hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    .page-hero p {
-      font-size: 1.2rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-weight: bold;
-      color: var(--primary-blue);
-      margin-bottom: 30px;
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-title::after {
-      content: "";
-      display: block;
-      width: 70px;
-      height: 4px;
-      background: var(--accent-blue);
-      margin: 12px auto 0;
-      border-radius: 2px;
-    }
-
-    .services-section {
-      padding: 80px 0;
-    }
-
-    .service-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 40px 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-      height: 100%;
-    }
-
-    .service-card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: rgba(0, 123, 255, 0.05);
-      transform: rotate(45deg);
-      transition: all 0.5s ease;
-      opacity: 0;
-    }
-
-    .service-card:hover::before {
-      opacity: 1;
-    }
-
-    .service-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .service-icon {
-      font-size: 3.5rem;
-      color: var(--accent-blue);
-      margin-bottom: 25px;
-      transition: transform 0.3s ease;
-    }
-
-    .service-card:hover .service-icon {
-      transform: scale(1.1);
-    }
-
-    .service-title {
-      font-weight: 700;
-      color: var(--primary-blue);
-      margin-bottom: 20px;
-      font-size: 1.4rem;
-      transition: color 0.3s ease;
-    }
-
-    .service-desc {
-      font-size: 0.95rem;
-      color: #555;
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .service-features {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 25px;
-      text-align: left;
-    }
-
-    .service-features li {
-      padding: 8px 0;
-      position: relative;
-      padding-left: 30px;
-    }
-
-    .service-features li:before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: var(--accent-blue);
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-
-    .btn-service {
-      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
-      color: white;
+    /* Enhanced Hamburger Menu */
+    .navbar-toggler {
       border: none;
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-weight: 600;
+      padding: 0.25rem 0.5rem;
       transition: all 0.3s ease;
     }
 
-    .btn-service:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
-      color: white;
+    .navbar-toggler:focus {
+      box-shadow: none;
     }
 
-    .process-section {
-      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
+    .animated-toggler .navbar-toggler-icon {
+      background-image: none;
+      width: 24px;
+      height: 18px;
+      position: relative;
+    }
+
+    .animated-toggler .navbar-toggler-icon span {
+      display: block;
+      position: absolute;
+      height: 2px;
+      width: 100%;
+      background: #333;
+      border-radius: 2px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: all 0.3s ease;
+    }
+
+    .animated-toggler .navbar-toggler-icon span:nth-child(1) {
+      top: 0;
+    }
+
+    .animated-toggler .navbar-toggler-icon span:nth-child(2) {
+      top: 8px;
+    }
+
+    .animated-toggler .navbar-toggler-icon span:nth-child(3) {
+      top: 16px;
+    }
+
+    .animated-toggler[aria-expanded="true"] .navbar-toggler-icon span:nth-child(1) {
+      top: 8px;
+      transform: rotate(135deg);
+    }
+
+    .animated-toggler[aria-expanded="true"] .navbar-toggler-icon span:nth-child(2) {
+      opacity: 0;
+      left: -20px;
+    }
+
+    .animated-toggler[aria-expanded="true"] .navbar-toggler-icon span:nth-child(3) {
+      top: 8px;
+      transform: rotate(-135deg);
+    }
+
+    /* Enhanced Call Button */
+    .call-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1050;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .call-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(0, 114, 255, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 114, 255, 0);
+      }
+    }
+
+    /* Mobile Menu Animation */
+    @media (max-width: 991px) {
+      .navbar-collapse {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .navbar-collapse.show {
+        max-height: 500px;
+      }
+
+      .navbar-nav {
+        padding: 1rem 0;
+      }
+
+      .call-button {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+    }
+
+    /* Desktop Dropdown Animation */
+    @media (min-width: 992px) {
+      .navbar-nav .nav-item {
+        position: relative;
+      }
+
+      .dropdown-menu {
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        display: block;
+        min-width: 250px;
+      }
+
+      .nav-item:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+    }
+
+    /* Product Cards Section */
+    .products-section {
       padding: 80px 0;
+      background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
     }
 
-    .process-step {
+    .category-title {
+      position: relative;
+      margin-bottom: 40px;
       text-align: center;
-      padding: 30px 20px;
+      color: var(--primary-blue);
     }
 
-    .step-number {
-      width: 60px;
-      height: 60px;
+    .category-title:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
       background: var(--accent-blue);
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      height: 100%;
+      overflow: hidden;
+      border-top: 4px solid var(--primary-blue);
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image {
+      height: 200px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.1);
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .product-description {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+
+    .product-category {
+      display: inline-block;
+      background: rgba(13, 110, 253, 0.1);
+      color: var(--accent-blue);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      height: 70vh;
+      background: linear-gradient(rgba(2, 36, 91, 0.85), rgba(2, 36, 91, 0.9)),
+        url('/images/hero/hero2.png') no-repeat center center;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
+      text-align: center;
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--primary-blue);
+      color: white;
+      padding: 50px 0 20px;
+    }
+
+    .footer h5 {
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .footer a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: white;
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+      margin-top: 40px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary-blue);
+      color: white;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin: 0 auto 20px;
+      text-decoration: none;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
     }
 
-    .step-title {
+    .back-to-top.show {
+      opacity: 1;
+    }
+
+    .back-to-top:hover {
+      background: var(--accent-blue);
+      transform: translateY(-5px);
+    }
+  </style>
+  <style>
+    :root {
+      --primary-blue: #02245B;
+      --accent-blue: #0d6efd;
+      --hover-blue: #0b5ed7;
+      --gradient-start: #00c6ff;
+      --gradient-end: #0072ff;
+      --transition-speed: 0.3s;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* Your existing header styles here */
+    /* ... (your header CSS) ... */
+
+    /* Content Body Styles */
+    .section-padding {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 80px;
+      height: 4px;
+      background: var(--accent-blue);
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      max-width: 700px;
+      margin-bottom: 3rem;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      height: 70vh;
+      background: linear-gradient(rgba(2, 36, 91, 0.85), rgba(2, 36, 91, 0.9)),
+        url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      margin-top: 76px;
+      /* Account for fixed navbar */
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn-hero {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .btn-hero:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 114, 255, 0.3);
+      color: white;
+    }
+
+    /* Features Section */
+    .features-section {
+      background: #f8f9fa;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .feature-title {
+      font-size: 1.25rem;
       font-weight: 600;
       color: var(--primary-blue);
       margin-bottom: 15px;
     }
 
-    .cta-section {
+    /* Products Section */
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      height: 100%;
+      overflow: hidden;
+      border-top: 4px solid var(--primary-blue);
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image {
+      height: 200px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.1);
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .product-description {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+
+    .product-category {
+      display: inline-block;
+      background: rgba(13, 110, 253, 0.1);
+      color: var(--accent-blue);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* About Section */
+    .about-section {
+      background: linear-gradient(to right, #f8f9fa 50%, white 50%);
+    }
+
+    .about-image {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+    }
+
+    .about-content {
+      padding-left: 40px;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Testimonials */
+    .testimonial-section {
       background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
       color: white;
-      padding: 80px 0;
+    }
+
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 30px;
+      margin: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .testimonial-text {
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+    }
+
+    .author-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 15px;
+    }
+
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-info h5 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .author-info p {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(rgba(2, 36, 91, 0.9), rgba(2, 36, 91, 0.9)),
+        url('') no-repeat center center;
+      background-size: cover;
+      color: white;
       text-align: center;
     }
 
     .cta-title {
       font-size: 2.5rem;
       font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .cta-subtitle {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--primary-blue);
+      color: white;
+      padding: 50px 0 20px;
+    }
+
+    .footer h5 {
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 10px;
       margin-bottom: 20px;
     }
 
-    footer {
-      background: var(--primary-blue);
-      color: white;
-      padding: 40px 0 20px;
-    }
-
-    footer a {
-      color: #fff;
+    .footer a {
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       transition: color 0.3s ease;
     }
 
-    footer a:hover {
-      color: var(--accent-blue);
+    .footer a:hover {
+      color: white;
     }
 
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: var(--accent-blue);
+      transform: translateY(-3px);
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+      margin-top: 40px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Responsive Adjustments */
     @media (max-width: 768px) {
-      .page-hero h1 {
+      .hero-content h1 {
         font-size: 2.5rem;
       }
 
-      .service-card {
-        padding: 30px 20px;
+      .section-title {
+        font-size: 2rem;
       }
 
-      .service-icon {
-        font-size: 3rem;
+      .about-content {
+        padding-left: 0;
+        margin-top: 30px;
+      }
+
+      .stats-container {
+        flex-direction: column;
+        gap: 20px;
       }
     }
   </style>
 </head>
 
 <body>
-  <!-- Modern Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+
+  <!-- ///////////////////////////////////////////////////HEAD///////////////////////////// -->
+
+  <!-- ✅ Modern Responsive Navbar (Fully Working Hamburger + Auto Close + Call Button) -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
     <div class="container">
       <!-- Brand Logo -->
       <a class="navbar-brand" href="index.html">
-        <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid">
+        <img src="images/essem-logo.png" alt="ESSEM" class="img-fluid" style="height:68px;">
       </a>
 
-      <!-- Toggler -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <!-- Hamburger Button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- Nav Links -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto fw-semibold">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">HOME</a>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">ABOUT US</a></li>
+
+          <!-- ✅ Products Dropdown (Modern Look) -->
+          <li class="nav-item dropdown" style="position: relative;">
+            <a class="nav-link dropdown-toggle" href="products.html" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false"
+              style="font-weight:600; letter-spacing:0.5px; transition: all 0.3s ease;">
+              PRODUCTS
+            </a>
+            <ul class="dropdown-menu border-0 shadow-lg rounded-3 mt-2" aria-labelledby="navbarDropdown"
+              style="min-width: 260px; background: #ffffff; padding: 10px 0; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);">
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#standard-apps"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-tools me-2" style="color:#007bff; font-size:1.1rem;"></i>
+                  Standard & Application Tools
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#special-tools"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-gear-wide-connected me-2" style="color:#6f42c1; font-size:1.1rem;"></i>
+                  Special Cutting Tools
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#coolant-lubricant"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-droplet-half me-2" style="color:#0dcaf0; font-size:1.1rem;"></i>
+                  Coolant and Lubricants
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#gauges"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-speedometer2 me-2" style="color:#fd7e14; font-size:1.1rem;"></i>
+                  Gauges
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#turning-milling"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-nut me-2" style="color:#198754; font-size:1.1rem;"></i>
+                  Turning & Milling Tools
+                </a>
+              </li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="about.html">ABOUT US</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="products.html">PRODUCTS</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="services.html">SERVICES</a>
-          </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="ESSEM-TOOLS-PRODUCTS.pdf">DOWNLOADS</a>
-          </li> -->
-          <li class="nav-item">
-            <a class="nav-link" href="contact.html">CONTACT US</a>
-          </li>
-          <!-- Call Button -->
-          <a href="tel:+919176781907" class="call-button" style="background: linear-gradient(135deg, #00c6ff, #0072ff);
-     color: #fff;
-     padding: 12px 20px;
-     border-radius: 50px;
-     text-decoration: none;
-     font-weight: bold;
-     font-size: 16px;
-     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-     z-index: 9999;
-     transition: transform 0.2s, box-shadow 0.2s;
-     bottom: 20px;
-     right: 20px;
-     margin-left: 200px;
-     ">
-            <i class="bi bi-telephone-fill"></i> +91 91767 81907
-          </a>
+
+          <!-- Add this small inline script for hover effect -->
+          <script>
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+              item.addEventListener('mouseenter', () => {
+                item.style.background = 'rgba(2, 28, 91, 0.1)';
+                item.style.transform = 'translateX(4px)';
+              });
+              item.addEventListener('mouseleave', () => {
+                item.style.background = 'transparent';
+                item.style.transform = 'translateX(0)';
+              });
+            });
+          </script>
+
+
+          <li class="nav-item"><a class="nav-link active" href="services.html">SERVICES</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">CONTACT US</a></li>
         </ul>
 
       </div>
     </div>
+    <!-- Floating Call Button -->
+    <a href="tel:+919176781907" class="call-button">
+      <i class="bi bi-telephone-fill"></i> +91&nbsp;91767&nbsp;81907
+    </a>
   </nav>
+
+  <!-- ✅ Styles -->
   <style>
     :root {
-      --primary-blue: #02245B;
-      --accent-blue: #0d6efd;
-      --light-blue: #eaf3ff;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      color: #333;
+      --accent-blue: #0072ff;
     }
 
     .navbar {
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
       border-top: 6px solid rgb(124, 132, 251);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .navbar-brand img {
-      height: 68px;
-      width: auto;
+    .navbar.scrolled {
+      background-color: #ffffffee;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
+    /* Nav Links */
     .navbar-nav .nav-link {
       color: #333;
       font-weight: 500;
@@ -387,434 +950,230 @@
       background-color: var(--accent-blue);
     }
 
-    .page-hero {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
-      color: white;
-      padding: 100px 0 60px;
-      text-align: center;
-    }
-
-    .page-hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    .page-hero p {
-      font-size: 1.2rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-weight: bold;
-      color: var(--primary-blue);
-      margin-bottom: 30px;
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-title::after {
-      content: "";
-      display: block;
-      width: 70px;
-      height: 4px;
-      background: var(--accent-blue);
-      margin: 12px auto 0;
-      border-radius: 2px;
-    }
-
-    .contact-section {
-      padding: 80px 0;
-      background: linear-gradient(135deg, #f8f9fa 0%, var(--light-blue) 100%);
-    }
-
-    .contact-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      height: 100%;
-    }
-
-    .contact-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .form-control {
-      border-radius: 10px;
-      padding: 12px 15px;
-      border: 2px solid #e9ecef;
-      transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
-    }
-
-    .form-label {
-      font-weight: 600;
-      color: var(--primary-blue);
-      margin-bottom: 8px;
-    }
-
-    .btn-contact {
-      background: linear-gradient(135deg, var(--accent-blue), var(--primary-blue));
-      color: white;
-      border: none;
-      padding: 12px 40px;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      width: 100%;
-    }
-
-    .btn-contact:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
-      color: white;
-    }
-
-    .contact-info {
-      padding: 20px 0;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(13, 110, 253, 0.05);
-      border-radius: 15px;
-      transition: all 0.3s ease;
-    }
-
-    .contact-item:hover {
-      background: rgba(13, 110, 253, 0.1);
-      transform: translateX(5px);
-    }
-
-    .contact-icon {
-      width: 50px;
-      height: 50px;
-      background: var(--accent-blue);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      margin-right: 20px;
-      flex-shrink: 0;
-    }
-
-    .contact-details h4 {
-      color: var(--primary-blue);
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-
-    .contact-details p {
-      color: #555;
-      margin: 0;
-    }
-
-    .contact-details a {
-      color: #555;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .contact-details a:hover {
-      color: var(--accent-blue);
-    }
-
-    .map-container {
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-      height: 400px;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 15px;
-      margin-top: 30px;
-    }
-
-    .social-link {
-      width: 45px;
-      height: 45px;
-      background: var(--accent-blue);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-
-    .social-link:hover {
-      transform: translateY(-3px);
-      background: var(--primary-blue);
-      color: white;
-    }
-
-    .business-hours {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-      margin-top: 30px;
-    }
-
-    .hours-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .hours-item:last-child {
-      border-bottom: none;
-    }
-
-    .alert {
-      border-radius: 10px;
-      border: none;
-      padding: 15px 20px;
-    }
-
-    .alert-success {
-      background: #d1edff;
-      color: var(--primary-blue);
-      border-left: 4px solid var(--accent-blue);
-    }
-
-    .alert-danger {
-      background: #ffe6e6;
-      color: #dc3545;
-      border-left: 4px solid #dc3545;
-    }
-
-    footer {
-      background: var(--primary-blue);
-      color: white;
-      padding: 40px 0 20px;
-    }
-
-    footer a {
+    /* ✅ Animated Call Button */
+    .call-button {
+      position: fixed;
+      top: 25px;
+      right: 20px;
+      background: linear-gradient(135deg, #0072ff, #962fbf);
       color: #fff;
+      padding: 10px 18px;
+      border-radius: 50px;
       text-decoration: none;
-      transition: color 0.3s ease;
+      font-weight: bold;
+      font-size: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1050;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
     }
 
-    footer a:hover {
-      color: var(--accent-blue);
+    .call-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      animation: none;
     }
 
-    @media (max-width: 768px) {
-      .page-hero h1 {
-        font-size: 2.5rem;
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7);
       }
 
-      .contact-card {
-        padding: 30px 20px;
+      70% {
+        box-shadow: 0 0 0 10px rgba(0, 114, 255, 0);
       }
 
-      .contact-item {
-        padding: 15px;
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 114, 255, 0);
+      }
+    }
+
+    @media (max-width: 991px) {
+      .call-button {
+        display: none;
       }
     }
   </style>
 
+  <!-- ✅ Bootstrap Bundle (JS + Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Page Hero -->
-  <section class="page-hero">
-    <div class="container">
-      <h1 data-aos="fade-down">Our Services</h1>
-      <p data-aos="fade-up" data-aos-delay="200">Comprehensive machining solutions to optimize your manufacturing
-        processes</p>
+  <!-- ✅ Custom JS -->
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+
+    // Close mobile menu when clicking any nav link
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const navbarCollapse = document.querySelector('#navbarNav');
+        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+        if (bsCollapse && window.innerWidth < 992) {
+          bsCollapse.hide();
+        }
+      });
+    });
+  </script>
+  <!-- ///////////////////////////////////////////////////HEAD///////////////////////////// -->
+   <br><br>
+
+<section class="services-section py-5">
+  <div class="container">
+        <!-- WhatsApp Enquiry Button -->
+      <a href="https://wa.me/919176781907?text=Hello%20ESSEM%20Team%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20threading%20tools.%0A%0AThank%20you."
+        target="_blank" class="whatsapp-button" style="background: linear-gradient(135deg, #25D366, #128C7E);
+          color: #fff;
+          padding: 12px 20px;
+          border-radius: 50px;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+          z-index: 9999;
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: transform 0.2s, box-shadow 0.2s;">
+        <i class="bi bi-whatsapp" style="font-size:20px;"></i> Chat on WhatsApp
+      </a>
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title">Our Services</h2>
+      <p class="text-muted">End-to-end solutions for all your manufacturing needs</p>
     </div>
-  </section>
-
-  <!-- Services Section -->
-  <section class="services-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="section-title">Our Comprehensive Services</h2>
-          <p class="text-muted">End-to-end solutions for all your manufacturing needs</p>
+    <div class="row g-4">
+      <!-- Turn Key Solutions -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up">
+        <div class="card h-100 border-0 shadow-sm text-center p-3">
+          <div class="product-image mb-3">
+            <img src="images/products/turnkey.jpg" alt="Turn Key Solutions" class="img-fluid rounded">
+          </div>
+          <h5 class="card-title mb-2">Turn Key Solutions</h5>
+          <p class="card-text small">Complete project management from concept to final implementation.</p>
         </div>
       </div>
-      <div class="row">
-        <!-- Turn Key Solutions -->
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="service-card">
-            <i class="fas fa-key service-icon"></i>
-            <h3 class="service-title">Turn Key Solutions</h3>
-            <p class="service-desc">Complete project management from concept to final implementation, ensuring seamless
-              integration and optimal performance.</p>
-            <ul class="service-features">
-              <li>End-to-end project management</li>
-              <li>Equipment selection & installation</li>
-              <li>Process optimization</li>
-              <li>Training & documentation</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
-          </div>
-        </div>
 
-        <!-- Fixturing Solutions -->
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="service-card">
-            <i class="fas fa-tools service-icon"></i>
-            <h3 class="service-title">Fixturing Solutions</h3>
-            <p class="service-desc">Custom workholding solutions designed to maximize productivity, accuracy, and
-              repeatability in your machining operations.</p>
-            <ul class="service-features">
-              <li>Custom fixture design</li>
-              <li>Quick-change systems</li>
-              <li>Modular fixturing</li>
-              <li>Prototype development</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
+      <!-- Fixturing Solutions -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 border-0 shadow-sm text-center p-3">
+          <div class="product-image mb-3">
+            <img src="images/products/fixturing.jpg" alt="Fixturing Solutions" class="img-fluid rounded">
           </div>
+          <h5 class="card-title mb-2">Fixturing Solutions</h5>
+          <p class="card-text small">Custom workholding solutions for productivity, accuracy, and repeatability.</p>
         </div>
+      </div>
 
-        <!-- Special Tools Design and Development -->
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="service-card">
-            <i class="fas fa-hammer service-icon"></i>
-            <h3 class="service-title">Special Tools Design & Development</h3>
-            <p class="service-desc">Custom tooling solutions engineered for specific applications, materials, and
-              production requirements.</p>
-            <ul class="service-features">
-              <li>CAD/CAM design</li>
-              <li>Prototype testing</li>
-              <li>Performance optimization</li>
-              <li>Technical documentation</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
+      <!-- Special Tools Design -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 shadow-sm text-center p-3">
+          <div class="product-image mb-3">
+            <img src="images/products/tooldesign.jpg" alt="Special Tools Design" class="img-fluid rounded">
           </div>
+          <h5 class="card-title mb-2">Special Tools Design</h5>
+          <p class="card-text small">Custom tooling solutions engineered for your specific applications.</p>
         </div>
+      </div>
 
-        <!-- Component Costing and Cycle Time -->
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="service-card">
-            <i class="fas fa-calculator service-icon"></i>
-            <h3 class="service-title">Component Costing & Cycle Time</h3>
-            <p class="service-desc">Detailed analysis and optimization of manufacturing costs and production cycle times
-              for improved profitability.</p>
-            <ul class="service-features">
-              <li>Cost analysis & optimization</li>
-              <li>Cycle time reduction</li>
-              <li>Process efficiency studies</li>
-              <li>ROI calculations</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
+      <!-- Component Costing -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 border-0 shadow-sm text-center p-3">
+          <div class="product-image mb-3">
+            <img src="images/products/costing.jpg" alt="Component Costing" class="img-fluid rounded">
           </div>
+          <h5 class="card-title mb-2">Component Costing</h5>
+          <p class="card-text small">Analysis and optimization of manufacturing costs and cycle times.</p>
         </div>
+      </div>
 
-        <!-- Branded Cutting Tools for Specialised -->
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="service-card">
-            <i class="fas fa-cut service-icon"></i>
-            <h3 class="service-title">Branded Cutting Tools for Specialised Applications</h3>
-            <p class="service-desc">Premium cutting tools from leading brands, selected and optimized for your specific
-              machining requirements.</p>
-            <ul class="service-features">
-              <li>Tool selection guidance</li>
-              <li>Application optimization</li>
-              <li>Performance testing</li>
-              <li>Technical support</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
+      <!-- Branded Cutting Tools -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="card h-100 border-0 shadow-sm text-center p-3">
+          <div class="product-image mb-3">
+            <img src="images/products/brand.jpg" alt="Branded Cutting Tools" class="img-fluid rounded">
           </div>
+          <h5 class="card-title mb-2">Branded Cutting Tools</h5>
+          <p class="card-text small">Premium cutting tools selected and optimized for your requirements.</p>
         </div>
+      </div>
 
-        <!-- Lubricant Solutions -->
-        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="service-card">
-            <i class="fas fa-oil-can service-icon"></i>
-            <h3 class="service-title">Lubricant Solutions</h3>
-            <p class="service-desc">Comprehensive lubrication solutions to enhance tool life, improve surface finish,
-              and optimize machining performance.</p>
-            <ul class="service-features">
-              <li>Coolant selection</li>
-              <li>Lubricant optimization</li>
-              <li>Filtration systems</li>
-              <li>Maintenance programs</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
+      <!-- Lubricant Solutions -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+        <div class="card h-100 border-0 shadow-sm text-center p-3">
+          <div class="product-image mb-3">
+            <img src="images/products/lubricant.jpg" alt="Lubricant Solutions" class="img-fluid rounded">
           </div>
-        </div>
-
-        <!-- Estimation -->
-        <div class="col-lg-4 col-md-6 mb-4 mx-auto" data-aos="fade-up" data-aos-delay="0">
-          <div class="service-card">
-            <i class="fas fa-chart-line service-icon"></i>
-            <h3 class="service-title">Estimation</h3>
-            <p class="service-desc">Accurate project estimation services including material costs, machining time,
-              tooling requirements, and overall project budgeting.</p>
-            <ul class="service-features">
-              <li>Detailed cost estimates</li>
-              <li>Timeline projections</li>
-              <li>Resource planning</li>
-              <li>Budget optimization</li>
-            </ul>
-            <button class="btn btn-service">Learn More</button>
-          </div>
+          <h5 class="card-title mb-2">Lubricant Solutions</h5>
+          <p class="card-text small">Lubrication solutions to enhance tool life and machining performance.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Process Section -->
-  <section class="process-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5" data-aos="fade-up">
-          <h2 class="section-title">Our Service Process</h2>
-          <p class="text-muted">A systematic approach to delivering exceptional results</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="process-step">
-            <div class="step-number">1</div>
-            <h4 class="step-title">Consultation</h4>
-            <p>Understanding your requirements, challenges, and objectives through detailed discussions.</p>
-          </div>
-        </div>
-        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="process-step">
-            <div class="step-number">2</div>
-            <h4 class="step-title">Analysis</h4>
-            <p>Comprehensive assessment of your current processes and identification of improvement opportunities.</p>
-          </div>
-        </div>
-        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="process-step">
-            <div class="step-number">3</div>
-            <h4 class="step-title">Solution Design</h4>
-            <p>Developing customized solutions tailored to your specific needs and operational constraints.</p>
-          </div>
-        </div>
-        <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
-          <div class="process-step">
-            <div class="step-number">4</div>
-            <h4 class="step-title">Implementation</h4>
-            <p>Seamless execution with continuous support and optimization to ensure desired outcomes.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+
+  <!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\FOOTER\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JS for additional animations -->
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function () {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+
+      // Back to top button visibility
+      const backToTop = document.querySelector('.back-to-top');
+      if (window.scrollY > 300) {
+        backToTop.classList.add('show');
+      } else {
+        backToTop.classList.remove('show');
+      }
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        if (this.getAttribute('href') !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            window.scrollTo({
+              top: target.offsetTop - 80,
+              behavior: 'smooth'
+            });
+          }
+        }
+      });
+    });
+
+    // Enhanced mobile menu close on link click
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+
+        if (navbarToggler.getAttribute('aria-expanded') === 'true') {
+          navbarToggler.click();
+        }
+      });
+    });
+  </script>
   <!-- CTA Section -->
   <section class="cta-section">
     <div class="container">
@@ -842,13 +1201,14 @@
       margin-bottom: 20px;
     }
   </style>
-  <!-- Floating Social Media Widget -->
+  <!-- Floating Social Media Widget
   <div class="social-float">
     <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
     <a href="#" class="social-icon linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-    <a href="#" class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://wa.me/+919176781907?text=Hello%20ESSEM%20Team%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20threading%20tools.%20%0A%0AThank%20you."
+      class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-  </div>
+  </div> -->
 
   <!-- CSS -->
   <style>
@@ -917,7 +1277,7 @@
   <!-- ChatBot Container -->
   <div class="chatbot-container">
     <button class="chatbot-btn" id="chatbotToggle">
-      <i class="fas fa-comments"></i>
+      <i class="bi bi-chat-dots-fill"></i>
     </button>
 
     <div class="chatbot-window" id="chatbotWindow">
@@ -954,7 +1314,7 @@
       <div class="chatbot-input">
         <input type="text" id="chatbotInput" placeholder="Ask about our products...">
         <button id="sendMessage">
-          <i class="fas fa-paper-plane"></i>
+          <i class="bi bi-send"></i>
         </button>
       </div>
 
@@ -971,7 +1331,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // DOM Elements
       const chatbotToggle = document.getElementById('chatbotToggle');
       const chatbotWindow = document.getElementById('chatbotWindow');
       const chatbotClose = document.getElementById('chatbotClose');
@@ -982,28 +1341,37 @@
       const quickActions = document.getElementById('quickActions');
       const callBtn = document.getElementById('callBtn');
 
-      // Chat state
       let isWaitingForResponse = false;
+      let isOpen = false;
 
-      // Auto welcome message
+      // 🟢 Smooth toggle with animation
+      chatbotToggle.addEventListener('click', function () {
+        isOpen = !isOpen;
+        if (isOpen) {
+          chatbotWindow.classList.add('show');
+          chatbotToggle.innerHTML = '<i class="bi bi-x-lg"></i>';
+          chatbotInput.focus();
+        } else {
+          chatbotWindow.classList.remove('show');
+          chatbotToggle.innerHTML = '<i class="bi bi-chat-dots-fill"></i>';
+        }
+      });
+
+      chatbotClose.addEventListener('click', function () {
+        isOpen = false;
+        chatbotWindow.classList.remove('show');
+        chatbotToggle.innerHTML = '<i class="bi bi-chat-dots-fill"></i>';
+      });
+
+      // 🟡 Welcome Message
       setTimeout(() => {
         if (!sessionStorage.getItem('chatbotWelcomed')) {
-          addBotMessage("Hello! I'm your ESSEM Assistant, powered by DeepSeek AI. I can help you with product information, pricing, shipping, and more. How can I assist you today?");
+          addBotMessage("👋 Hello! I'm your <strong>ESSEM Assistant</strong>. I can help you with product details, pricing, and support. How may I assist you?");
           sessionStorage.setItem('chatbotWelcomed', 'true');
         }
       }, 1000);
 
-      // Toggle chatbot window
-      chatbotToggle.addEventListener('click', function () {
-        chatbotWindow.style.display = 'flex';
-        chatbotInput.focus();
-      });
-
-      chatbotClose.addEventListener('click', function () {
-        chatbotWindow.style.display = 'none';
-      });
-
-      // Send message function
+      // Send user message
       function sendUserMessage() {
         const message = chatbotInput.value.trim();
         if (message && !isWaitingForResponse) {
@@ -1011,135 +1379,79 @@
           chatbotInput.value = '';
           isWaitingForResponse = true;
 
-          // Show typing indicator
           typingIndicator.style.display = 'block';
           scrollToBottom();
 
-          // Simulate bot response after delay
           setTimeout(() => {
             typingIndicator.style.display = 'none';
             processUserMessage(message);
             isWaitingForResponse = false;
-          }, 1500);
+          }, 1200);
         }
       }
 
-      // Send message on button click
       sendMessage.addEventListener('click', sendUserMessage);
+      chatbotInput.addEventListener('keypress', e => e.key === 'Enter' && sendUserMessage());
 
-      // Send message on Enter key
-      chatbotInput.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-          sendUserMessage();
-        }
-      });
-
-      // Quick action buttons
-      document.querySelectorAll('.quick-action-btn').forEach(button => {
-        button.addEventListener('click', function () {
-          const question = this.getAttribute('data-question');
-          let message = '';
-
-          switch (question) {
-            case 'products':
-              message = "What products do you offer?";
-              break;
-            case 'pricing':
-              message = "Can you provide pricing information?";
-              break;
-            case 'shipping':
-              message = "What are your shipping options?";
-              break;
-            case 'support':
-              message = "How can I contact support?";
-              break;
-          }
-
-          chatbotInput.value = message;
+      // Quick actions
+      document.querySelectorAll('.quick-action-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          chatbotInput.value = btn.textContent;
           sendUserMessage();
         });
       });
 
-      // Call button
-      callBtn.addEventListener('click', function () {
-        addBotMessage("Connecting you to our support team at +91 91767 81907. You can also save this number for future reference.");
-        // In a real implementation, this would initiate a phone call
-        // window.location.href = 'tel:+919176781907';
-
-        // Show a confirmation message
+      callBtn.addEventListener('click', () => {
+        addBotMessage("📞 Connecting you to our support team at +91 91767 81907...");
         setTimeout(() => {
-          addBotMessage("If you prefer, you can also email us at essemtools@gmail.com for non-urgent inquiries.");
-        }, 2000);
+          addBotMessage("💡 You can also email us at <strong>essemtools@gmail.com</strong> for inquiries.");
+        }, 1800);
       });
 
-      // Add user message to chat
+      // Helpers
       function addUserMessage(text) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message user-message';
-        messageDiv.textContent = text;
-        chatbotMessages.appendChild(messageDiv);
+        const msg = document.createElement('div');
+        msg.className = 'message user-message';
+        msg.textContent = text;
+        chatbotMessages.appendChild(msg);
         scrollToBottom();
       }
 
-      // Add bot message to chat
       function addBotMessage(text) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message bot-message';
-        messageDiv.textContent = text;
-        chatbotMessages.appendChild(messageDiv);
+        const msg = document.createElement('div');
+        msg.className = 'message bot-message';
+        msg.innerHTML = text;
+        chatbotMessages.appendChild(msg);
         scrollToBottom();
       }
 
-      // Scroll to bottom of messages
       function scrollToBottom() {
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
       }
 
-      // Process user message and generate response
+      // 💬 Responses
       function processUserMessage(message) {
-        const lowerMessage = message.toLowerCase();
+        const text = message.toLowerCase();
 
-        // Check for FAQ-related questions
-        if (lowerMessage.includes('product') || lowerMessage.includes('offer') || lowerMessage.includes('tool')) {
-          addBotMessage("We offer a comprehensive range of precision threading tools including:\n\n• Threading Taps & Dies\n• Drills & Reamers\n• End Mills\n• Boring Systems\n• Micro-boring Heads\n• Shrink-fit Tooling\n\nAll our tools are engineered for precision and durability in industrial applications.");
-
-          // Suggest checking FAQ
-          setTimeout(() => {
-            addBotMessage("You can find detailed information about our products in the FAQ section above.");
-          }, 1000);
-        }
-        else if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much')) {
-          addBotMessage("Our pricing varies based on product specifications, materials, and order quantity. For accurate pricing information, I recommend:\n\n1. Contacting our sales team directly\n2. Requesting a quote for specific products\n3. Checking our current promotions\n\nWould you like me to connect you with our sales team?");
-        }
-        else if (lowerMessage.includes('ship') || lowerMessage.includes('deliver') || lowerMessage.includes('shipping')) {
-          addBotMessage("We provide reliable global shipping with the following options:\n\n• Standard Shipping (7-14 business days)\n• Express Shipping (3-5 business days)\n• Priority Shipping (1-2 business days)\n\nAll products are carefully packaged to maintain precision and quality during transit. Shipping costs vary by destination and order size.");
-        }
-        else if (lowerMessage.includes('custom') || lowerMessage.includes('special') || lowerMessage.includes('bespoke')) {
-          addBotMessage("Yes! We specialize in custom-engineered tooling solutions. Our technical team can design tools specifically for your unique machining requirements, materials, and applications.");
-
-          setTimeout(() => {
-            addBotMessage("To discuss custom solutions, please contact our technical team who will guide you through the design and specification process.");
-          }, 1000);
-        }
-        else if (lowerMessage.includes('contact') || lowerMessage.includes('support') || lowerMessage.includes('help') || lowerMessage.includes('call')) {
-          addBotMessage("You can reach our team through multiple channels:\n\n📞 Phone: +91 91767 81907 / +91 97879 38377\n✉️ Email: essemtools@gmail.com\n📍 Address: 142-A,Ramachandra Rao IAS Road, \nNear Toll Plazza, Royappa Nagar,\nChennai, Tamil Nadu 600048.\n\nOur support hours are Monday-Saturday, 9 AM - 5.301 PM IST.");
-        }
-        else if (lowerMessage.includes('industry') || lowerMessage.includes('serve') || lowerMessage.includes('client')) {
-          addBotMessage("We serve a diverse range of industries worldwide:\n\n• Automotive Manufacturing\n• Aerospace Engineering\n• General Manufacturing\n• Precision Engineering\n• Industrial Equipment\n• Defense Sector\n\nOur tools are trusted for their precision and reliability across these sectors.");
-        }
-        else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-          addBotMessage("Hello! I'm your ESSEM Assistant, powered by DeepSeek AI. I'm here to help you with information about our threading tools, pricing, shipping, and technical support. What would you like to know?");
-        }
-        else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
-          addBotMessage("You're welcome! I'm glad I could help. Is there anything else you'd like to know about ESSEM Threading Tools?");
-        }
-        else {
-          // Default response for unrecognized queries
-          addBotMessage("I'm here to help with information about ESSEM Threading Tools. You can ask me about:\n\n• Our product range\n• Pricing and quotes\n• Shipping information\n• Custom tooling solutions\n• Technical support\n\nOr use the quick action buttons above for common questions.");
+        if (text.includes('product')) {
+          addBotMessage("🛠️ We offer high-quality threading tools, gauges, and precision cutting instruments for industrial applications.");
+        } else if (text.includes('price') || text.includes('cost')) {
+          addBotMessage("💰 Pricing depends on your requirements. Would you like me to connect you with our sales team?");
+        } else if (text.includes('ship')) {
+          addBotMessage("🚚 We ship globally via standard, express, and priority delivery options.");
+        } else if (text.includes('custom')) {
+          addBotMessage("⚙️ Yes! We design custom tools to meet your machining specifications.");
+        } else if (text.includes('contact')) {
+          addBotMessage("📞 You can contact us at +91 91767 81907 or email essemtools@gmail.com.");
+        } else if (text.includes('hi') || text.includes('hello')) {
+          addBotMessage("👋 Hello again! How can I help you today?");
+        } else {
+          addBotMessage("🤖 I'm here to assist with ESSEM products, pricing, or technical support. Try asking about our tools or services!");
         }
       }
     });
   </script>
+
   <style>
     /* Chatbot Styles */
     .chatbot-container {
@@ -1175,16 +1487,35 @@
       left: 0;
       width: 350px;
       height: 500px;
-      background: white;
+      background: url("images/chatbg.png") white;
       border-radius: 15px;
       box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
       display: none;
       flex-direction: column;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.35s ease;
     }
 
+    .chatbot-window.show {
+      display: flex !important;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chatbot-btn i {
+      font-size: 26px;
+      transition: transform 0.3s ease;
+    }
+
+    .chatbot-btn:hover i {
+      transform: scale(1.1);
+    }
+
+
     .chatbot-header {
-      background: var(--primary-blue);
+      background: blue;
       color: white;
       padding: 15px;
       display: flex;
@@ -1373,20 +1704,119 @@
       color: #0d6efd;
       text-decoration: underline;
     }
+
+    /* Footer Styling */
+    footer {
+      background-color: #021c5b;
+      /* Dark blue background */
+      color: #ffffff;
+      /* White text */
+      text-align: center;
+      padding: 40px 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer a {
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #ff8c00;
+      /* Orange highlight on hover */
+      transform: scale(1.05);
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 0.95rem;
+    }
+
+    footer .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      footer {
+        padding: 30px 15px;
+      }
+
+      footer p {
+        font-size: 0.9rem;
+      }
+
+      footer a {
+        display: inline-block;
+        margin: 5px 0;
+      }
+    }
   </style>
 
-  <!-- Bootstrap JS -->
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- AOS JS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JavaScript for Checkerboard Animation -->
   <script>
-    // Initialize AOS
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: 'ease-out-cubic'
+    document.addEventListener('DOMContentLoaded', function () {
+      // Create checkerboard grid
+      const checkerboardGrid = document.getElementById('checkerboardGrid');
+      const gridSize = 10; // 10x10 grid
+
+      for (let i = 0; i < gridSize * gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('checkerboard-cell');
+        checkerboardGrid.appendChild(cell);
+      }
+
+      const cells = document.querySelectorAll('.checkerboard-cell');
+      const overlay = document.getElementById('checkerboardOverlay');
+
+      // Function to animate checkerboard transition
+      function animateCheckerboardTransition() {
+        // Show the overlay
+        overlay.style.display = 'block';
+
+        // Animate cells with staggered delay
+        cells.forEach((cell, index) => {
+          const row = Math.floor(index / gridSize);
+          const col = index % gridSize;
+
+          // Calculate delay based on position to create checkerboard pattern
+          const delay = ((row + col) % 2) * 0.1 + (row * 0.05);
+
+          setTimeout(() => {
+            cell.style.opacity = '1';
+          }, delay * 1000);
+        });
+
+        // Hide overlay after animation completes
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          // Reset cells for next animation
+          cells.forEach(cell => {
+            cell.style.opacity = '0';
+          });
+        }, 1000);
+      }
+
+      // Add event listeners for carousel slide events
+      const carousel = document.getElementById('heroCarousel');
+
+      carousel.addEventListener('slide.bs.carousel', function () {
+        // Start animation when slide starts
+        animateCheckerboardTransition();
+      });
     });
   </script>
+  <!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\FOOTER\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 </body>
 
 </html>

@@ -327,7 +327,8 @@
     /* Hero Section */
     .hero-section {
       height: 70vh;
-      background: linear-gradient(rgba(2, 36, 91, 0.85), rgba(2, 36, 91, 0.9)), url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+      background: linear-gradient(rgba(2, 36, 91, 0.85), rgba(2, 36, 91, 0.9)),
+        url('/images/hero/hero2.png') no-repeat center center;
       background-size: cover;
       background-position: center;
       display: flex;
@@ -412,6 +413,9 @@
 </head>
 
 <body>
+
+  <!-- ///////////////////////////////////////////////////HEAD///////////////////////////// -->
+
   <!-- ✅ Modern Responsive Navbar (Fully Working Hamburger + Auto Close + Call Button) -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
     <div class="container">
@@ -431,16 +435,84 @@
         <ul class="navbar-nav fw-semibold">
           <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
           <li class="nav-item"><a class="nav-link" href="about.html">ABOUT US</a></li>
-          <li class="nav-item"><a class="nav-link active" href="products.html">PRODUCTS</a></li>
+
+          <!-- ✅ Products Dropdown (Modern Look) -->
+          <li class="nav-item dropdown" style="position: relative;">
+            <a class="nav-link dropdown-toggle" href="products.html" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false"
+              style="color:#003ac3; font-weight:600; letter-spacing:0.5px; transition: all 0.3s ease;">
+              PRODUCTS
+            </a>
+            <ul class="dropdown-menu border-0 shadow-lg rounded-3 mt-2" aria-labelledby="navbarDropdown"
+              style="min-width: 260px; background: #ffffff; padding: 10px 0; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);">
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#standard-apps"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-tools me-2" style="color:#007bff; font-size:1.1rem;"></i>
+                  Standard & Application Tools
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#special-tools"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-gear-wide-connected me-2" style="color:#6f42c1; font-size:1.1rem;"></i>
+                  Special Cutting Tools
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#coolant-lubricant"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-droplet-half me-2" style="color:#0dcaf0; font-size:1.1rem;"></i>
+                  Coolant and Lubricants
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#gauges"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-speedometer2 me-2" style="color:#fd7e14; font-size:1.1rem;"></i>
+                  Gauges
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="products.html#turning-milling"
+                  style="padding:10px 18px; font-weight:500; color:#333; transition:all 0.3s ease; border-radius:8px;">
+                  <i class="bi bi-nut me-2" style="color:#198754; font-size:1.1rem;"></i>
+                  Turning & Milling Tools
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Add this small inline script for hover effect -->
+          <script>
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+              item.addEventListener('mouseenter', () => {
+                item.style.background = 'rgba(2, 28, 91, 0.1)';
+                item.style.transform = 'translateX(4px)';
+              });
+              item.addEventListener('mouseleave', () => {
+                item.style.background = 'transparent';
+                item.style.transform = 'translateX(0)';
+              });
+            });
+          </script>
+
+
           <li class="nav-item"><a class="nav-link" href="services.html">SERVICES</a></li>
           <li class="nav-item"><a class="nav-link" href="contact.html">CONTACT US</a></li>
         </ul>
+
       </div>
     </div>
-     <!-- Floating Call Button -->
-        <a href="tel:+919176781907" class="call-button">
-          <i class="bi bi-telephone-fill"></i> +91&nbsp;91767&nbsp;81907
-        </a>
+    <!-- Floating Call Button -->
+    <a href="tel:+919176781907" class="call-button">
+      <i class="bi bi-telephone-fill"></i> +91&nbsp;91767&nbsp;81907
+    </a>
   </nav>
 
   <!-- ✅ Styles -->
@@ -561,20 +633,42 @@
       });
     });
   </script>
+  <!-- ///////////////////////////////////////////////////HEAD///////////////////////////// -->
+
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-content">
-      <h1>Precision Industrial Tools</h1>
+      <h1>Essem Threading Tools</h1>
       <p>High-quality cutting tools, gauges, and specialized equipment for all your manufacturing needs</p>
       <a href="#products" class="btn btn-light btn-lg">Explore Products</a>
     </div>
   </section>
-
   <!-- Product Cards Section -->
   <section class="products-section" id="products">
     <div class="container">
+      <!-- WhatsApp Enquiry Button -->
+      <a href="https://wa.me/919176781907?text=Hello%20ESSEM%20Team%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20threading%20tools.%0A%0AThank%20you."
+        target="_blank" class="whatsapp-button" style="background: linear-gradient(135deg, #25D366, #128C7E);
+          color: #fff;
+          padding: 12px 20px;
+          border-radius: 50px;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+          z-index: 9999;
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: transform 0.2s, box-shadow 0.2s;">
+        <i class="bi bi-whatsapp" style="font-size:20px;"></i> Chat on WhatsApp
+      </a>
+      <br>
       <!-- Category 1: Standard & Application Tools -->
-      <h2 class="category-title" id="standard-tools">Standard & Application Tools</h2>
+      <h2 class="category-title" id="standard-apps">Standard & Application Tools</h2>
       <div class="row g-4 mb-5">
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
@@ -706,9 +800,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Thread Plug and Ring Gauges">
+              <img src="images/products/threadplug.png" alt="Thread Plug and Ring Gauges">
             </div>
             <div class="product-info">
               <h3 class="product-name">Thread Plug and Ring Gauges</h3>
@@ -720,9 +812,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Plain Plug & Ring Gauges">
+              <img src="images/products/plainplug.png" alt="Plain Plug & Ring Gauges">
             </div>
             <div class="product-info">
               <h3 class="product-name">Plain Plug & Ring Gauges</h3>
@@ -734,9 +824,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Snap Gauges">
+              <img src="images/products/snapgauge.png" alt="Snap Gauges">
             </div>
             <div class="product-info">
               <h3 class="product-name">Snap Gauges</h3>
@@ -748,9 +836,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Air Plug Gauges">
+              <img src="images/products/airplug.png" alt="Air Plug Gauges">
             </div>
             <div class="product-info">
               <h3 class="product-name">Air Plug Gauges</h3>
@@ -763,9 +849,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Air Plug and Ring Gauges">
+              <img src="images/products/airplugring.png" alt="Air Plug and Ring Gauges">
             </div>
             <div class="product-info">
               <h3 class="product-name">Air Plug and Ring Gauges</h3>
@@ -782,9 +866,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Turning Tools">
+              <img src="images/products/turningt.png" alt="Turning Tools">
             </div>
             <div class="product-info">
               <h3 class="product-name">Turning Tools</h3>
@@ -797,9 +879,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Milling Tools">
+              <img src="images/products/milling.png" alt="Milling Tools">
             </div>
             <div class="product-info">
               <h3 class="product-name">Milling Tools</h3>
@@ -812,9 +892,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Inserts">
+              <img src="images/products/inserts.png" alt="Inserts">
             </div>
             <div class="product-info">
               <h3 class="product-name">Inserts</h3>
@@ -827,9 +905,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Tool Holders">
+              <img src="images/products/toolhold.png" alt="Tool Holders">
             </div>
             <div class="product-info">
               <h3 class="product-name">Tool Holders</h3>
@@ -842,9 +918,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Collets">
+              <img src="images/products/coolet.png" alt="Collets">
             </div>
             <div class="product-info">
               <h3 class="product-name">Collets</h3>
@@ -862,9 +936,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Step Drills">
+              <img src="images/products/stepdrill.png" alt="Step Drills">
             </div>
             <div class="product-info">
               <h3 class="product-name">Step Drills</h3>
@@ -877,9 +949,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Step Endmills">
+              <img src="images/products/stependmill.png" alt="Step Endmills">
             </div>
             <div class="product-info">
               <h3 class="product-name">Step Endmills</h3>
@@ -892,9 +962,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Carbide Burnishing Drills">
+              <img src="images/products/cburn.png" alt="Carbide Burnishing Drills">
             </div>
             <div class="product-info">
               <h3 class="product-name">Carbide Burnishing Drills</h3>
@@ -907,9 +975,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Carbide Step Reamers">
+              <img src="images/products/carbide.png" alt="Carbide Step Reamers">
             </div>
             <div class="product-info">
               <h3 class="product-name">Carbide Step Reamers</h3>
@@ -921,9 +987,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="Milling Cutters">
+              <img src="images/products/milling.png" alt="Milling Cutters">
             </div>
             <div class="product-info">
               <h3 class="product-name">All Types of Milling Cutters</h3>
@@ -936,9 +1000,7 @@
         <div class="col-md-6 col-lg-4">
           <div class="product-card">
             <div class="product-image">
-              <img
-                src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                alt="PCD Form Tools">
+              <img src="images/products/pcd.png" alt="PCD Form Tools">
             </div>
             <div class="product-info">
               <h3 class="product-name">PCD Form Tools</h3>
@@ -949,8 +1011,66 @@
           </div>
         </div>
       </div>
+      <!-- Category 5: Coolant -->
+      <h2 class="category-title" id="coolant-lubricant">Coolant & Lubricants</h2>
+      <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image">
+              <img src="images/products/water.png" alt="Water Soluble Coolant">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Water Soluble Coolant</h3>
+              <p class="product-description">High-performance coolant for metal cutting and machining operations.</p>
+              <span class="product-category">Coolant</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image">
+              <img src="images/products/synthe.png" alt="Synthetic Coolant">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Synthetic Coolant</h3>
+              <p class="product-description">Long-lasting coolant for high-speed cutting and precision machining.</p>
+              <span class="product-category">Coolant</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image">
+              <img src="images/products/cuttingoil.png" alt="Cutting Oil">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Cutting Oil</h3>
+              <p class="product-description">Lubricant for metal cutting processes to reduce friction and heat.</p>
+              <span class="product-category">Lubricant</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="product-card">
+            <div class="product-image">
+              <img src="images/products/wayoil.png" alt="Way Oil">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Way Oil</h3>
+              <p class="product-description">High-viscosity lubricant for machine slides and guideways to ensure smooth
+                motion.</p>
+              <span class="product-category">Lubricant</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </section>
+
+  <!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\FOOTER\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1002,6 +1122,649 @@
       });
     });
   </script>
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12" data-aos="fade-up">
+          <h2 class="cta-title">Ready to Optimize Your Manufacturing?</h2>
+          <p class="mb-4">Let our experts help you improve efficiency, reduce costs, and enhance quality</p>
+          <a href="contact.html" class="btn btn-light btn-lg me-3">Get Free Consultation</a>
+          <a href="tel:+919176781907" class="btn btn-outline-light btn-lg">Call Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+  </style>
+  <!-- Floating Social Media Widget
+  <div class="social-float">
+    <a href="#" class="social-icon facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-icon linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://wa.me/+919176781907?text=Hello%20ESSEM%20Team%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20your%20threading%20tools.%20%0A%0AThank%20you."
+      class="social-icon whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="#" class="social-icon instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+  </div> -->
+
+  <!-- CSS -->
+  <style>
+    .social-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .social-icon {
+      text-decoration: none;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #007bff, #00c6ff);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-10px) scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Brand Colors */
+    .facebook {
+      background: linear-gradient(45deg, #4267B2, #1E3C72);
+    }
+
+    .linkedin {
+      background: linear-gradient(45deg, #0077B5, #00A0DC);
+    }
+
+    .whatsapp {
+      background: linear-gradient(45deg, #25D366, #128C7E);
+    }
+
+    .instagram {
+      background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+    }
+
+    /* Responsive tweak */
+    @media (max-width: 576px) {
+      .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .social-float {
+        gap: 10px;
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+  </style>
+  <!-- ChatBot Container -->
+  <div class="chatbot-container">
+    <button class="chatbot-btn" id="chatbotToggle">
+      <i class="bi bi-chat-dots-fill"></i>
+    </button>
+
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <div class="chatbot-title">ESSEM Assistant</div>
+        <button class="chatbot-close" id="chatbotClose">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="chatbot-messages" id="chatbotMessages">
+        <!-- Messages will be added here dynamically -->
+      </div>
+
+      <div class="typing-indicator" id="typingIndicator">
+        ESSEM Assistant is typing...
+      </div>
+
+      <div class="quick-actions" id="quickActions">
+        <button class="quick-action-btn" data-question="products">Our Products</button>
+        <button class="quick-action-btn" data-question="pricing">Pricing</button>
+        <button class="quick-action-btn" data-question="shipping">Shipping Info</button>
+        <button class="quick-action-btn" data-question="support">Contact Support</button>
+      </div>
+
+      <div class="call-btn-container" style="padding: 10px 15px;">
+        <a href="tel:+919176781907" style="text-decoration: none;">
+          <button class="call-btn" id="callBtn">
+            <i class="fas fa-phone"></i> Call Us Now: +91 91767 81907
+          </button>
+        </a>
+      </div>
+
+      <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Ask about our products...">
+        <button id="sendMessage">
+          <i class="bi bi-send"></i>
+        </button>
+      </div>
+
+      <div class="chatbot-footer">
+        <!-- Minimal, inline-style (great for footers or small badges) -->
+        <a href="https://zolangnexora.com" title="Zolang Nexora — Software Development & IT Solutions"
+          style="font-family:Inter, Arial, sans-serif;font-size:13px;color:#6b7280;text-decoration:none;float: right;">
+          Powered by <strong style="color:#0b74de">Zolang Nexora Softwares</strong>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatbotToggle = document.getElementById('chatbotToggle');
+      const chatbotWindow = document.getElementById('chatbotWindow');
+      const chatbotClose = document.getElementById('chatbotClose');
+      const chatbotMessages = document.getElementById('chatbotMessages');
+      const chatbotInput = document.getElementById('chatbotInput');
+      const sendMessage = document.getElementById('sendMessage');
+      const typingIndicator = document.getElementById('typingIndicator');
+      const quickActions = document.getElementById('quickActions');
+      const callBtn = document.getElementById('callBtn');
+
+      let isWaitingForResponse = false;
+      let isOpen = false;
+
+      // 🟢 Smooth toggle with animation
+      chatbotToggle.addEventListener('click', function () {
+        isOpen = !isOpen;
+        if (isOpen) {
+          chatbotWindow.classList.add('show');
+          chatbotToggle.innerHTML = '<i class="bi bi-x-lg"></i>';
+          chatbotInput.focus();
+        } else {
+          chatbotWindow.classList.remove('show');
+          chatbotToggle.innerHTML = '<i class="bi bi-chat-dots-fill"></i>';
+        }
+      });
+
+      chatbotClose.addEventListener('click', function () {
+        isOpen = false;
+        chatbotWindow.classList.remove('show');
+        chatbotToggle.innerHTML = '<i class="bi bi-chat-dots-fill"></i>';
+      });
+
+      // 🟡 Welcome Message
+      setTimeout(() => {
+        if (!sessionStorage.getItem('chatbotWelcomed')) {
+          addBotMessage("👋 Hello! I'm your <strong>ESSEM Assistant</strong>. I can help you with product details, pricing, and support. How may I assist you?");
+          sessionStorage.setItem('chatbotWelcomed', 'true');
+        }
+      }, 1000);
+
+      // Send user message
+      function sendUserMessage() {
+        const message = chatbotInput.value.trim();
+        if (message && !isWaitingForResponse) {
+          addUserMessage(message);
+          chatbotInput.value = '';
+          isWaitingForResponse = true;
+
+          typingIndicator.style.display = 'block';
+          scrollToBottom();
+
+          setTimeout(() => {
+            typingIndicator.style.display = 'none';
+            processUserMessage(message);
+            isWaitingForResponse = false;
+          }, 1200);
+        }
+      }
+
+      sendMessage.addEventListener('click', sendUserMessage);
+      chatbotInput.addEventListener('keypress', e => e.key === 'Enter' && sendUserMessage());
+
+      // Quick actions
+      document.querySelectorAll('.quick-action-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          chatbotInput.value = btn.textContent;
+          sendUserMessage();
+        });
+      });
+
+      callBtn.addEventListener('click', () => {
+        addBotMessage("📞 Connecting you to our support team at +91 91767 81907...");
+        setTimeout(() => {
+          addBotMessage("💡 You can also email us at <strong>essemtools@gmail.com</strong> for inquiries.");
+        }, 1800);
+      });
+
+      // Helpers
+      function addUserMessage(text) {
+        const msg = document.createElement('div');
+        msg.className = 'message user-message';
+        msg.textContent = text;
+        chatbotMessages.appendChild(msg);
+        scrollToBottom();
+      }
+
+      function addBotMessage(text) {
+        const msg = document.createElement('div');
+        msg.className = 'message bot-message';
+        msg.innerHTML = text;
+        chatbotMessages.appendChild(msg);
+        scrollToBottom();
+      }
+
+      function scrollToBottom() {
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      }
+
+      // 💬 Responses
+      function processUserMessage(message) {
+        const text = message.toLowerCase();
+
+        if (text.includes('product')) {
+          addBotMessage("🛠️ We offer high-quality threading tools, gauges, and precision cutting instruments for industrial applications.");
+        } else if (text.includes('price') || text.includes('cost')) {
+          addBotMessage("💰 Pricing depends on your requirements. Would you like me to connect you with our sales team?");
+        } else if (text.includes('ship')) {
+          addBotMessage("🚚 We ship globally via standard, express, and priority delivery options.");
+        } else if (text.includes('custom')) {
+          addBotMessage("⚙️ Yes! We design custom tools to meet your machining specifications.");
+        } else if (text.includes('contact')) {
+          addBotMessage("📞 You can contact us at +91 91767 81907 or email essemtools@gmail.com.");
+        } else if (text.includes('hi') || text.includes('hello')) {
+          addBotMessage("👋 Hello again! How can I help you today?");
+        } else {
+          addBotMessage("🤖 I'm here to assist with ESSEM products, pricing, or technical support. Try asking about our tools or services!");
+        }
+      }
+    });
+  </script>
+
+  <style>
+    /* Chatbot Styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .chatbot-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .chatbot-btn:hover {
+      background: var(--primary-blue);
+      transform: scale(1.05);
+    }
+
+    .chatbot-window {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      width: 350px;
+      height: 500px;
+      background:url("images/chatbg.png") white;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.35s ease;
+    }
+
+    .chatbot-window.show {
+      display: flex !important;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chatbot-btn i {
+      font-size: 26px;
+      transition: transform 0.3s ease;
+    }
+
+    .chatbot-btn:hover i {
+      transform: scale(1.1);
+    }
+
+
+    .chatbot-header {
+      background: blue;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .bot-message {
+      background: var(--light-blue);
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .user-message {
+      background: var(--accent-blue);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+
+    .chatbot-input {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 10px 15px;
+      outline: none;
+    }
+
+    .chatbot-input button {
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .quick-action-btn {
+      background: var(--light-blue);
+      border: 1px solid var(--accent-blue);
+      color: var(--primary-blue);
+      border-radius: 15px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-action-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .call-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .call-btn:hover {
+      background: #218838;
+    }
+
+    .typing-indicator {
+      display: none;
+      align-self: flex-start;
+      background: var(--light-blue);
+      padding: 10px 15px;
+      border-radius: 18px;
+      border-bottom-left-radius: 5px;
+      font-style: italic;
+      color: var(--medium-gray);
+    }
+
+    .chatbot-footer {
+      padding: 8px 15px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--medium-gray);
+      border-top: 1px solid #eee;
+      background: #f9f9f9;
+    }
+
+    /* FAQ Section */
+    .accordion-button:not(.collapsed) {
+      background-color: var(--light-blue);
+      color: var(--primary-blue);
+    }
+
+    .accordion-button:focus {
+      box-shadow: none;
+      border-color: rgba(0, 0, 0, .125);
+    }
+
+    .demo-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+
+
+  <!-- Footer -->
+  <footer class="text-center text-white py-4">
+    <div class="container">
+      <p class="mb-2">&copy; 2025 ESSEM Threading Tools | All Rights Reserved</p>
+      <p class="mb-2">
+        <a href="privacy.html" class="text-white text-decoration-none me-3">Privacy Policy</a> |
+        <a href="terms.html" class="text-white text-decoration-none ms-3">Terms & Conditions</a>
+      </p>
+      <p class="mb-0">
+        Developed and Maintained by <a href="https://www.zolangnexora.com" target="_blank"
+          style="color:#7083ad; text-decoration:none; font-weight:bold;">
+          Zolang Nexora Softwares
+        </a>
+      </p>
+    </div>
+
+  </footer>
+
+  <!-- Optional Footer CSS -->
+  <style>
+    footer a:hover {
+      color: #0d6efd;
+      text-decoration: underline;
+    }
+
+    /* Footer Styling */
+    footer {
+      background-color: #021c5b;
+      /* Dark blue background */
+      color: #ffffff;
+      /* White text */
+      text-align: center;
+      padding: 40px 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer a {
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #ff8c00;
+      /* Orange highlight on hover */
+      transform: scale(1.05);
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 0.95rem;
+    }
+
+    footer .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      footer {
+        padding: 30px 15px;
+      }
+
+      footer p {
+        font-size: 0.9rem;
+      }
+
+      footer a {
+        display: inline-block;
+        margin: 5px 0;
+      }
+    }
+  </style>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JavaScript for Checkerboard Animation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Create checkerboard grid
+      const checkerboardGrid = document.getElementById('checkerboardGrid');
+      const gridSize = 10; // 10x10 grid
+
+      for (let i = 0; i < gridSize * gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('checkerboard-cell');
+        checkerboardGrid.appendChild(cell);
+      }
+
+      const cells = document.querySelectorAll('.checkerboard-cell');
+      const overlay = document.getElementById('checkerboardOverlay');
+
+      // Function to animate checkerboard transition
+      function animateCheckerboardTransition() {
+        // Show the overlay
+        overlay.style.display = 'block';
+
+        // Animate cells with staggered delay
+        cells.forEach((cell, index) => {
+          const row = Math.floor(index / gridSize);
+          const col = index % gridSize;
+
+          // Calculate delay based on position to create checkerboard pattern
+          const delay = ((row + col) % 2) * 0.1 + (row * 0.05);
+
+          setTimeout(() => {
+            cell.style.opacity = '1';
+          }, delay * 1000);
+        });
+
+        // Hide overlay after animation completes
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          // Reset cells for next animation
+          cells.forEach(cell => {
+            cell.style.opacity = '0';
+          });
+        }, 1000);
+      }
+
+      // Add event listeners for carousel slide events
+      const carousel = document.getElementById('heroCarousel');
+
+      carousel.addEventListener('slide.bs.carousel', function () {
+        // Start animation when slide starts
+        animateCheckerboardTransition();
+      });
+    });
+  </script>
+  <!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\FOOTER\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 </body>
 
 </html>
